@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin:page xmlns="http://piston.koyad.in/html5" xmlns:plugin="http://piston.koyad.in/plugin"
+	xmlns:c="http://piston.koyad.in/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://piston.koyad.in/html5 http://piston.koyad.in/html5 
+						http://piston.koyad.in/plugin http://piston.koyad.in/plugin 
+						http://piston.koyad.in/core http://piston.koyad.in/core">
+						
+	<plugin:head>
+		<script type="text/javascript" src="js/app.js"></script>
+	</plugin:head>
+						
+	<plugin:body>
+		<c:if test="${not empty msg}">
+			<p class="msg-container">
+				<span class="fa fa-info-circle fa-lg" style="margin-left: 5px; margin-right: 5px; color: white;"></span>
+				<c:out value="${msg.details}"/>
+			</p>
+		</c:if>
+	
+		<div>
+		    <form name="deletePages" method="POST" action="deletePages">
+		    	<!-- Required for showing children pages under a parentId after deleting pages. -->
+		    	<hidden property="parentId" />
+		    	
+			    <div style="padding: 15px;">
+			        <label> 
+		        		<span style="padding-right: 8px;">
+		        			<b>Select site</b>
+		        		</span>
+		                <select id="site" property="siteId" options="${sites}" label="metadata.title" value="id">
+		                	<option value="">-- Select --</option>
+		                </select>
+		                <plugin:actionURL action="pageDetails" class="btn" style="margin-left: 20px;" faClass="fa fa-plus fa-lg" faStyle="font-size: 1.2em;  padding-right: 6px;">
+							<c:out value="New Page" />
+						</plugin:actionURL>
+			        </label>
+			    </div>
+
+				<c:if test="${not empty site}">
+				    <div>
+				    	<div id="resChildren">
+				    		
+			    			<!-- breadcrumb -->
+					    	<div style="padding: 5px; background-color: #94d5c5; overflow-y: auto; margin: 0px 5px; line-height: 1.5em;">
+					    		<plugin:actionURL action="getSitePageChildren" style="text-decoration: none;  font-weight: bold; color: white; font-size: 15px;">
+									<c:out value="${site.metadata.title}" />
+									<plugin:param name="siteId" value="${site.id}" />
+								</plugin:actionURL>
+								<c:if test="${not empty parents}">
+									<span class="fa fa-play fa-lg" style="margin: 0px 5px; color: white;"></span>
+						    		<c:iterate items="${parents}" var="parent" index="index">
+					    				<plugin:actionURL action="getSitePageChildren" style="text-decoration: none;  font-weight: bold; color: white; font-size: 15px;">
+											<c:out value="${parent.metadata.title}" />
+											<plugin:param name="siteId" value="${parent.site.id}" />
+											<plugin:param name="parentId" value="${parent.id}" />
+										</plugin:actionURL>
+										<c:if test="${index &lt; parents.size() - 1}" >
+											<span class="fa fa-play fa-lg" style="margin: 0px 5px; color: white;"></span>
+										</c:if>
+						    		</c:iterate>
+					    		</c:if>
+					    	</div>
+						    
+						    <!-- children  -->
+					    	<c:if test="${not empty children}">
+						       	<div style="padding: 10px;">
+							           	<table class="piston-table">
+											<tr>
+												<th>Select</th>
+												<th>Name</th>
+												<th>Title</th>
+												<th>Mapping</th>
+												<th>Actions</th>
+											</tr>
+											<c:iterate items="${children}" var="page">
+												<tr>
+													<td style="text-align:center;">
+														<checkbox property="pageIds" value="${page.id}" />
+													</td>
+													<td><c:out value="${page.name}" /></td>
+													<td>
+														<plugin:actionURL action="getSitePageChildren" style="text-decoration: none;">
+															<c:out value="${page.metadata.title}" />
+															<plugin:param name="siteId" value="${page.site.id}" />
+															<plugin:param name="parentId" value="${page.id}" />
+														</plugin:actionURL>
+													</td>
+													<td><c:out value="${page.metadata.mapping}" /></td>
+													<td>
+														<plugin:actionURL action="pageDetails" title="Edit Page" class="img-btn" faClass="fa fa-pencil fa-lg" faStyle="font-size: 1.2em;">
+															<plugin:param name="id" value="${page.id}" />
+														</plugin:actionURL>
+														<a href="/piston/portal/site-${site.metadata.mapping}${page.uri}?piston_page_mode=edit" target="_blank" title="Edit layout" class="img-btn">
+															<span class="fa fa-columns fa-lg" style="font-size: 1.2em;"></span>
+														</a>
+													</td>
+												</tr>
+											</c:iterate>
+										</table>
+										
+										<p style="padding-left: 10px;">
+											<pButton class="btn pseudo-submit-button" faClass="fa fa-trash fa-lg" faStyle="font-size: 1.2em; padding-right: 6px;"> 
+							  					<c:out value="Delete" />
+							  				</pButton>
+						  				</p>
+						       	</div>
+					       	</c:if>
+					       	<c:if test="${empty children}">
+								No data found.
+							</c:if>
+				    	</div>
+				    </div>
+		    	</c:if>
+		    </form>
+		</div>
+	</plugin:body>
+</plugin:page>

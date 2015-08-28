@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin:page xmlns="http://piston.koyad.in/html5" xmlns:plugin="http://piston.koyad.in/plugin"
+	xmlns:c="http://piston.koyad.in/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://piston.koyad.in/html5 http://piston.koyad.in/html5 
+						http://piston.koyad.in/plugin http://piston.koyad.in/plugin 
+						http://piston.koyad.in/core http://piston.koyad.in/core">
+	<plugin:body>
+		<c:if test="${not empty msg}">
+			<p class="msg-container">
+				<span class="fa fa-info-circle fa-lg" style="margin-left: 5px; margin-right: 5px; color: white;"></span>
+				<c:out value="${msg.details}"/>
+			</p>
+		</c:if>
+	
+	    <div style="padding: 15px;">
+	        <form name="frameDetails" method="POST" action="saveFrame">
+	        	<fieldset>
+					<legend>Frame information</legend>
+	                <ul style="list-style: none;">
+	                     <li>Name</li>
+	                     <li>
+	                     		<text property="name" size="100" />
+	                     </li>
+	                     <li>Title</li>
+	                     <li>
+	                    		<text property="title" size="100" />
+	                     </li>
+	                     <hidden property="id" />
+	                     <hidden property="version" />
+	                </ul>
+	        	</fieldset>
+	        	
+	        	<!-- 
+				<div style="text-align: right; margin-top: 10px;">
+					<c:if test="${empty frameDetails.id}">
+						<button style="margin-left: 20px; margin-top: 10px;" type="submit">Create</button>
+					</c:if>
+					<c:if test="${not empty frameDetails.id}">
+						<button style="margin-left: 20px; margin-top: 10px;" type="submit">Update</button>
+					</c:if>
+					<button style="margin-left: 20px; margin-top: 10px;" type="button" class="pseudo-close">Close</button>
+				</div> 
+				-->
+				<div style="text-align: right; margin-top: 20px;">
+					<pButton class="btn pseudo-submit-button" faClass="fa fa-save fa-lg" faStyle="font-size: 1.2em; padding-right: 6px;"> 
+		  				<c:if test="${empty frameDetails.id}">
+							<c:out value="Create" />
+						</c:if>
+						<c:if test="${not empty frameDetails.id}">
+							<c:out value="Update" />
+						</c:if>
+		  			</pButton>
+					<plugin:actionURL action="listFrames" class="btn" faClass="fa fa-close fa-lg" faStyle="font-size: 1.2em; padding-right: 6px;">
+						<c:out value="Close" />
+					</plugin:actionURL>
+				</div>
+            </form>
+	    </div>
+	</plugin:body>
+</plugin:page>

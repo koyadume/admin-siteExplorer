@@ -1,0 +1,30 @@
+#list {
+		margin: 10px;
+		width: 180px;
+		list-style: none;
+		padding: 0px;
+}
+#list > li {
+	display: block;
+	background-color: yellow;
+	
+}
+#list > li:FIRST-CHILD {
+	background-color: red;
+	text-align: center;
+}
+#contentList {
+	list-style: none;
+	padding: 5px;
+}
+#contentList > li {
+	display: block;
+	text-align: center;
+}
+#contentList > li > span {
+	display: block;
+}
+#contentList > li > span:hover {
+	background-color: pink;
+	cursor: move;
+}
