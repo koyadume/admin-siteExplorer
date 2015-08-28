@@ -1,0 +1,70 @@
+/* ========	context menu ============ */		
+.new-page-contextMenu {
+	list-style: none;
+	padding: 4px;
+	background-color: #505050;
+	cursor: default;
+	margin-top: 0px;
+}
+
+.new-page-contextMenu li {
+	font-family: verdana;
+	font-size: 13px;
+}
+
+.new-page-contextMenu li a {
+	text-decoration: none;
+}
+
+.new-page-contextMenu li:hover {
+	background-color: #A8A8A8;
+	color: white;
+}
+	
+/* ============= page styles ================ */		
+.row-container {
+	background-color: yellow;
+	overflow-y: auto;
+}
+	.row-container > div {
+		margin-top: 10px;
+	}
+	.row-container > div:FIRST-CHILD {
+		margin-top: 0px;
+	}
+		
+.row {
+	overflow-y: auto;
+}
+
+.multi > div {
+	margin-left: 10px;
+	float: left;
+}
+.multi > div:FIRST-CHILD {
+	margin-left: 0px;
+}
+
+.tileContainer {
+	background-color: red;
+	min-height: 100px;
+	padding: 10px;
+}
+.middleContainer {
+	background-color: yellow;
+	overflow-y: auto;
+}
+	.tile {
+		background-color: pink;
+		margin-top: 10px;
+		text-align: center;
+		min-height: 60px;
+		font-size: 30px;
+		line-height: 2em;
+	}
+	.tile:FIRST-CHILD {
+		margin-top: 0px;
+	}
+	.tile:LAST-CHILD {
+		margin-bottom: 40px;
+	}

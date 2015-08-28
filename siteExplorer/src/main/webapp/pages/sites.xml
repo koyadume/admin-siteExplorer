@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin:page xmlns="http://piston.koyad.in/html5" xmlns:plugin="http://piston.koyad.in/plugin"
+	xmlns:c="http://piston.koyad.in/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://piston.koyad.in/html5 http://piston.koyad.in/html5 
+						http://piston.koyad.in/plugin http://piston.koyad.in/plugin 
+						http://piston.koyad.in/core http://piston.koyad.in/core">
+	<plugin:body>
+		<c:if test="${not empty msg}">
+			<p>
+				<c:out value="${msg.details}"/>
+			</p>
+		</c:if>
+		
+		<div style="padding: 10px;">
+			<form name="deleteSites" method="POST" action="deleteSites">
+				<table class="piston-table">
+						<tr>
+							<th>Select</th>
+							<th>Name</th>
+							<th>Title</th>
+							<th>Mapping</th>
+							<th>Actions</th>
+						</tr>
+						<c:iterate items="${sites}" var="site">
+							<tr>
+								<td style="text-align:center;">
+									<checkbox property="siteIds" value="${site.id}" disabled="${!site.metadata.manageable}" />
+								</td>
+								<td><c:out value="${site.name}" /></td>
+								<td><c:out value="${site.metadata.title}" /></td>
+								<td><c:out value="${site.metadata.mapping}" /></td>
+								<td>
+									<plugin:actionURL action="siteDetails" title="Edit Site" class="img-btn" faClass="fa fa-pencil fa-lg" faStyle="font-size: 1.2em;">
+										<plugin:param name="id" value="${site.id}" />
+									</plugin:actionURL>
+								</td>
+							</tr>
+						</c:iterate>
+				</table>
+				
+				<p style="padding-left: 10px;">
+					<pButton class="btn pseudo-submit-button" faClass="fa fa-trash fa-lg" faStyle="font-size: 1.2em; padding-right: 6px;"> 
+	  					<c:out value="Delete" />
+	  				</pButton>
+	  				<plugin:actionURL action="siteDetails" class="btn" faClass="fa fa-plus fa-lg" faStyle="font-size: 1.2em; padding-right: 6px;">
+						<c:out value="New Site" />
+					</plugin:actionURL>
+  				</p>
+			</form>
+		</div>
+	</plugin:body>
+</plugin:page>
