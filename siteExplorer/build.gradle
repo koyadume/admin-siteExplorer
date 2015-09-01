@@ -1,6 +1,4 @@
-ext	{
-	resFolder = 'admin-siteExplorer'
-}
+apply plugin: 'war'
 
 dependencies {
 
