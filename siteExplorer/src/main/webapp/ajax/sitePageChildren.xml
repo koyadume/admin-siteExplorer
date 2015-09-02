@@ -60,7 +60,6 @@
 				   		var siteId = $(this).attr('id');
 			        	var form = createPluginForm($(this), 'ajaxGetSitePageChildren');
 						form.append(createHidden('siteId', siteId));
-						//form.append(createHidden('scenario', 'createUpdatePage'));
 						$.ajax({
 				    		async : false,
 				            url: '/piston/ajaxPlugin',
