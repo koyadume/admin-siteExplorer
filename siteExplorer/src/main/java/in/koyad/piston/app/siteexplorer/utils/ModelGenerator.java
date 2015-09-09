@@ -33,14 +33,14 @@ import in.koyad.piston.app.siteexplorer.forms.ResourcePluginForm;
 import in.koyad.piston.app.siteexplorer.forms.SiteDetailsPluginForm;
 import in.koyad.piston.common.exceptions.FrameworkException;
 import in.koyad.piston.common.utils.BeanPropertyUtils;
-import in.koyad.piston.common.utils.ServiceManager;
 import in.koyad.piston.common.utils.StringUtil;
 import in.koyad.piston.core.sdk.api.PortalUserService;
+import in.koyad.piston.core.sdk.impl.PortalUserImpl;
 import in.koyad.piston.servicedelegate.model.PistonModelCache;
 
 public class ModelGenerator {
 	
-	private static final PortalUserService portalUserService = ServiceManager.getService(PortalUserService.class);
+	private static final PortalUserService portalUserService = new PortalUserImpl();
 
 	public static Site getSite(SiteDetailsPluginForm form) throws FrameworkException {
 		SiteMetadata metadata = new SiteMetadata();

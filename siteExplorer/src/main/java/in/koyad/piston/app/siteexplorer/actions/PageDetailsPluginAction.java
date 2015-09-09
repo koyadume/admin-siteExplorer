@@ -21,10 +21,10 @@ import in.koyad.piston.app.siteexplorer.forms.PageDetailsPluginForm;
 import in.koyad.piston.app.siteexplorer.utils.PopulateFormUtil;
 import in.koyad.piston.common.exceptions.FrameworkException;
 import in.koyad.piston.common.utils.LogUtil;
-import in.koyad.piston.common.utils.ServiceManager;
 import in.koyad.piston.controller.plugin.PluginAction;
 import in.koyad.piston.controller.plugin.annotations.AnnoPluginAction;
 import in.koyad.piston.core.sdk.api.SiteService;
+import in.koyad.piston.core.sdk.impl.SiteImpl;
 import in.koyad.piston.servicedelegate.model.PistonModelCache;
 import in.koyad.piston.ui.utils.RequestContextUtil;
 
@@ -35,7 +35,7 @@ public class PageDetailsPluginAction extends PluginAction {
 	
 	public static final String ACTION_NAME = "pageDetails";
 	
-	private final SiteService siteService = ServiceManager.getService(SiteService.class);
+	private final SiteService siteService = new SiteImpl();
 
 	private static final LogUtil LOGGER = LogUtil.getLogger(PageDetailsPluginAction.class);
 	

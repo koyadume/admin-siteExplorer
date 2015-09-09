@@ -18,7 +18,6 @@ package in.koyad.piston.app.siteexplorer.actions;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.koyad.piston.core.model.Page;
 import org.koyad.piston.core.model.Site;
@@ -27,11 +26,11 @@ import in.koyad.piston.app.siteexplorer.forms.DeletePagesPluginForm;
 import in.koyad.piston.app.siteexplorer.forms.GetSitePageChildrenPluginForm;
 import in.koyad.piston.common.exceptions.FrameworkException;
 import in.koyad.piston.common.utils.LogUtil;
-import in.koyad.piston.common.utils.ServiceManager;
 import in.koyad.piston.common.utils.StringUtil;
 import in.koyad.piston.controller.plugin.PluginAction;
 import in.koyad.piston.controller.plugin.annotations.AnnoPluginAction;
 import in.koyad.piston.core.sdk.api.SiteService;
+import in.koyad.piston.core.sdk.impl.SiteImpl;
 import in.koyad.piston.servicedelegate.model.PistonModelCache;
 import in.koyad.piston.ui.utils.FormUtils;
 import in.koyad.piston.ui.utils.RequestContextUtil;
@@ -43,7 +42,7 @@ public class GetSitePageChildrenPluginAction extends PluginAction {
 	
 	public static final String ACTION_NAME = "getSitePageChildren";
 	
-	private final SiteService siteService = ServiceManager.getService(SiteService.class);
+	private final SiteService siteService = new SiteImpl();
 
 	private static final LogUtil LOGGER = LogUtil.getLogger(GetSitePageChildrenPluginAction.class);
 	
