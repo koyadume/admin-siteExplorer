@@ -21,10 +21,10 @@ import org.koyad.piston.core.model.Site;
 
 import in.koyad.piston.common.exceptions.FrameworkException;
 import in.koyad.piston.common.utils.LogUtil;
-import in.koyad.piston.common.utils.ServiceManager;
 import in.koyad.piston.controller.plugin.PluginAction;
 import in.koyad.piston.controller.plugin.annotations.AnnoPluginAction;
 import in.koyad.piston.core.sdk.api.SiteService;
+import in.koyad.piston.core.sdk.impl.SiteImpl;
 import in.koyad.piston.ui.utils.RequestContextUtil;
 
 @AnnoPluginAction(
@@ -32,7 +32,7 @@ import in.koyad.piston.ui.utils.RequestContextUtil;
 )
 public class ListSitesPluginAction extends PluginAction {
 	
-	private final SiteService siteService = ServiceManager.getService(SiteService.class);
+	private final SiteService siteService = new SiteImpl();
 
 	public static final String ACTION_NAME = "listSites";
 	

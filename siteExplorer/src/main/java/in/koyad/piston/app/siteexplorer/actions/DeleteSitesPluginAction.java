@@ -23,10 +23,10 @@ import in.koyad.piston.common.constants.MsgType;
 import in.koyad.piston.common.exceptions.FrameworkException;
 import in.koyad.piston.common.utils.LogUtil;
 import in.koyad.piston.common.utils.Message;
-import in.koyad.piston.common.utils.ServiceManager;
 import in.koyad.piston.controller.plugin.PluginAction;
 import in.koyad.piston.controller.plugin.annotations.AnnoPluginAction;
 import in.koyad.piston.core.sdk.api.SiteService;
+import in.koyad.piston.core.sdk.impl.SiteImpl;
 import in.koyad.piston.servicedelegate.model.PistonModelCache;
 import in.koyad.piston.ui.utils.FormUtils;
 import in.koyad.piston.ui.utils.RequestContextUtil;
@@ -36,7 +36,7 @@ import in.koyad.piston.ui.utils.RequestContextUtil;
 )
 public class DeleteSitesPluginAction extends PluginAction {
 	
-	private final SiteService siteService = ServiceManager.getService(SiteService.class);
+	private final SiteService siteService = new SiteImpl();
 	
 	public static final String ACTION_NAME = "deleteSites";
 
