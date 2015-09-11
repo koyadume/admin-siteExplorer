@@ -51,7 +51,7 @@
 						    		<c:iterate items="${parents}" var="parent" index="index">
 					    				<plugin:actionURL action="getSitePageChildren" style="text-decoration: none;  font-weight: bold; color: white; font-size: 15px;">
 											<c:out value="${parent.metadata.title}" />
-											<plugin:param name="siteId" value="${parent.site.id}" />
+											<plugin:param name="siteId" value="${parent.siteId}" />
 											<plugin:param name="parentId" value="${parent.id}" />
 										</plugin:actionURL>
 										<c:if test="${index &lt; parents.size() - 1}" >
@@ -81,7 +81,7 @@
 													<td>
 														<plugin:actionURL action="getSitePageChildren" style="text-decoration: none;">
 															<c:out value="${page.metadata.title}" />
-															<plugin:param name="siteId" value="${page.site.id}" />
+															<plugin:param name="siteId" value="${page.siteId}" />
 															<plugin:param name="parentId" value="${page.id}" />
 														</plugin:actionURL>
 													</td>
