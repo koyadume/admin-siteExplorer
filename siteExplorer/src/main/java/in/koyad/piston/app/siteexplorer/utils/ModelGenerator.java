@@ -69,22 +69,22 @@ public class ModelGenerator {
 		Page page = new Page();
 		page.setMetadata(metadata);
 		
-		//id, name
+		//id, name, siteId
 		BeanPropertyUtils.copyProperties(page, form);
 		
-		Site site = null;
-		if(StringUtil.isEmpty(form.getId())) {
-			//This means its a new paage and so site id must be present in the form.
-			site = PistonModelCache.sites.get(form.getSiteId());
-		} else {
-			site = PistonModelCache.pages.get(form.getId()).getSite();
-		}
-		page.setSite(site);
+//		Site site = null;
+//		if(StringUtil.isEmpty(form.getId())) {
+//			//This means its a new page and so site id must be present in the form.
+//			site = PistonModelCache.sites.get(form.getSiteId());
+//		} else {
+//			site = PistonModelCache.pages.get(form.getId()).getSite();
+//		}
+//		page.setSite(site);
 		
 		if(StringUtil.isEmpty(form.getId())) {
 			//This means its a new page and so position should be set.
 			if(StringUtil.isEmpty(metadata.getParentId())) {
-				metadata.setPosition(site.getRootPages().size() + 1);
+				metadata.setPosition(PistonModelCache.sites.get(form.getSiteId()).getRootPages().size() + 1);
 			} else {
 				metadata.setPosition(PistonModelCache.pages.get(metadata.getParentId()).getChildren().size() + 1);
 			}

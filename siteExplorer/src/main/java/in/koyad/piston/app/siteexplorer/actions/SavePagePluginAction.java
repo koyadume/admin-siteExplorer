@@ -75,11 +75,11 @@ public class SavePagePluginAction extends PluginAction {
 			if(StringUtil.isEmpty(form.getId())) {
 				PistonModelCache.sites.remove(form.getSiteId());
 			} else {
-				PistonModelCache.sites.remove(PistonModelCache.pages.get(form.getId()).getSite().getId());
+				PistonModelCache.sites.remove(PistonModelCache.pages.get(form.getId()).getSiteId());
 			}
 			
 			//invalidate data in computation cache
-			PermissionsUtil.clearSiteTreePermissions(newData.getSite());
+			PermissionsUtil.clearSiteTreePermissions(PistonModelCache.sites.get(newData.getSiteId()));
 			
 			if(StringUtil.isEmpty(form.getId())) {
 				RequestContextUtil.setRequestAttribute("msg", new Message(MsgType.INFO, MessageFormat.format(Messages.RESOURCE_CREATED_SUCCESSFULLY, "Page")));
