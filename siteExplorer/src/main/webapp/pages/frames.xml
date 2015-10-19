@@ -6,7 +6,8 @@
 						http://piston.koyad.in/core http://piston.koyad.in/core">
 	<plugin:body>
 		<c:if test="${not empty msg}">
-			<p>
+			<p class="msg-container">
+				<span class="fa fa-info-circle fa-lg" style="margin-left: 5px; margin-right: 5px; color: white;"></span>
 				<c:out value="${msg.details}"/>
 			</p>
 		</c:if>

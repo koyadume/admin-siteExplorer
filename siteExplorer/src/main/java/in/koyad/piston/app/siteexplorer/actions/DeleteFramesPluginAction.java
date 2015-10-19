@@ -56,7 +56,7 @@ public class DeleteFramesPluginAction extends PluginAction {
 			//udpate data in cache
 			PistonModelCache.frames.removeAll(frameIds);
 			
-			RequestContextUtil.setRequestAttribute("msg", new Message(MsgType.INFO, "Frames deleted successfully."));
+			RequestContextUtil.setRequestAttribute("msg", new Message(MsgType.INFO, "Frame(s) deleted successfully."));
 		} catch(FrameworkException ex) {
 			LOGGER.logException(ex);
 			RequestContextUtil.setRequestAttribute("msg", new Message(MsgType.ERROR, "Error occured while deleting frames."));
