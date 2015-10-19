@@ -15,10 +15,13 @@
  */
 package in.koyad.piston.app.siteexplorer.actions;
 
+import java.text.MessageFormat;
+
 import org.koyad.piston.core.model.Frame;
 
 import in.koyad.piston.app.siteexplorer.forms.FrameDetailsPluginForm;
 import in.koyad.piston.app.siteexplorer.utils.ModelGenerator;
+import in.koyad.piston.common.constants.Messages;
 import in.koyad.piston.common.constants.MsgType;
 import in.koyad.piston.common.exceptions.FrameworkException;
 import in.koyad.piston.common.utils.LogUtil;
@@ -54,6 +57,12 @@ public class SaveFramePluginAction extends PluginAction {
 		try {
 			//update data in db
 			form = FormUtils.createFormWithReqParams(FrameDetailsPluginForm.class);
+			
+			boolean update = true;
+			if(StringUtil.isEmpty(form.getId())) {
+				update = false;
+			}
+			
 			Frame newData = ModelGenerator.getFrame(form);
 			portalService.saveFrame(newData);
 			
@@ -61,12 +70,17 @@ public class SaveFramePluginAction extends PluginAction {
 			form.setVersion(newData.getVersion());
 			
 			//update data in cache if it is update operation
-			if(!StringUtil.isEmpty(newData.getId())) {
+			if(update) {
 				Frame oldData = PistonModelCache.frames.get(newData.getId());
 				oldData.refresh(newData);
 			}
 			
-			RequestContextUtil.setRequestAttribute("msg", new Message(MsgType.INFO, "Frame details updated successfully."));
+			if(!update) {
+				form.setId(newData.getId());
+				RequestContextUtil.setRequestAttribute("msg", new Message(MsgType.INFO, MessageFormat.format(Messages.RESOURCE_CREATED_SUCCESSFULLY, "Frame")));
+			} else {
+				RequestContextUtil.setRequestAttribute("msg", new Message(MsgType.INFO, MessageFormat.format(Messages.RESOURCE_UPDATED_SUCCESSFULLY, "Frame")));
+			}
 		} catch(FrameworkException ex) {
 			LOGGER.logException(ex);
 			RequestContextUtil.setRequestAttribute("msg", new Message(MsgType.ERROR, "Error occured while updating frame details."));
