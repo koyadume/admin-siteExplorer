@@ -23,6 +23,7 @@ import in.koyad.piston.common.constants.MsgType;
 import in.koyad.piston.common.exceptions.FrameworkException;
 import in.koyad.piston.common.utils.LogUtil;
 import in.koyad.piston.common.utils.Message;
+import in.koyad.piston.common.utils.StringUtil;
 import in.koyad.piston.controller.plugin.PluginAction;
 import in.koyad.piston.controller.plugin.annotations.AnnoPluginAction;
 import in.koyad.piston.core.sdk.api.PortalService;
@@ -59,9 +60,11 @@ public class SaveFramePluginAction extends PluginAction {
 			//update version in form
 			form.setVersion(newData.getVersion());
 			
-			//update data in cache
-			Frame oldData = PistonModelCache.frames.get(newData.getId());
-			oldData.refresh(newData);
+			//update data in cache if it is update operation
+			if(!StringUtil.isEmpty(newData.getId())) {
+				Frame oldData = PistonModelCache.frames.get(newData.getId());
+				oldData.refresh(newData);
+			}
 			
 			RequestContextUtil.setRequestAttribute("msg", new Message(MsgType.INFO, "Frame details updated successfully."));
 		} catch(FrameworkException ex) {
