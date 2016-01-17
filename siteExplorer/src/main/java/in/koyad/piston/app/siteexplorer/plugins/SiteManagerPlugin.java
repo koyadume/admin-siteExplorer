@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2015 Shailendra Singh <shailendra_01@outlook.com>
+ * Copyright (c) 2012-2016 Shailendra Singh <shailendra_01@outlook.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,11 @@ import in.koyad.piston.common.utils.LogUtil;
 import in.koyad.piston.controller.plugin.Plugin;
 import in.koyad.piston.controller.plugin.annotations.AnnoPlugin;
 
-@AnnoPlugin(name = "siteManager", title = "Site Manager", defaultAction = ListSitesPluginAction.ACTION_NAME)
+@AnnoPlugin(
+	name = "siteManager", 
+	title = "Site Manager", 
+	defaultAction = ListSitesPluginAction.ACTION_NAME
+)
 public class SiteManagerPlugin extends Plugin {
 
 	private static final LogUtil LOGGER = LogUtil

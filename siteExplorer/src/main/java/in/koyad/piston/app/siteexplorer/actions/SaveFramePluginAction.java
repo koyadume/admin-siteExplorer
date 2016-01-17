@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2015 Shailendra Singh <shailendra_01@outlook.com>
+ * Copyright (c) 2012-2016 Shailendra Singh <shailendra_01@outlook.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,6 +73,8 @@ public class SaveFramePluginAction extends PluginAction {
 			if(update) {
 				Frame oldData = PistonModelCache.frames.get(newData.getId());
 				oldData.refresh(newData);
+			} else {
+				PistonModelCache.frames.get(newData.getId());
 			}
 			
 			if(!update) {
