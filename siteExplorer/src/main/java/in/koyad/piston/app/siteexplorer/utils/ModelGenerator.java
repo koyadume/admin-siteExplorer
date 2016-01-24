@@ -20,11 +20,11 @@ import java.util.Set;
 
 import org.koyad.piston.core.model.Frame;
 import org.koyad.piston.core.model.Page;
-import org.koyad.piston.core.model.PageMetadata;
 import org.koyad.piston.core.model.Resource;
 import org.koyad.piston.core.model.SecurityAcl;
 import org.koyad.piston.core.model.Site;
-import org.koyad.piston.core.model.SiteMetadata;
+import org.koyad.piston.core.model.embedded.PageMetadata;
+import org.koyad.piston.core.model.embedded.SiteMetadata;
 import org.koyad.piston.core.model.enums.Role;
 
 import in.koyad.piston.app.siteexplorer.forms.FrameDetailsPluginForm;
