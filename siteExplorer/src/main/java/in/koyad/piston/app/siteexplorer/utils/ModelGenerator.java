@@ -40,7 +40,7 @@ import in.koyad.piston.servicedelegate.model.PistonModelCache;
 
 public class ModelGenerator {
 	
-	private static final PortalUserService portalUserService = new PortalUserImpl();
+	private static final PortalUserService portalUserService = PortalUserImpl.getInstance();
 
 	public static Site getSite(SiteDetailsPluginForm form) throws FrameworkException {
 		SiteMetadata metadata = new SiteMetadata();

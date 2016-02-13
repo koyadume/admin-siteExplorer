@@ -32,7 +32,7 @@ import in.koyad.piston.ui.utils.RequestContextUtil;
 )
 public class ListFramesPluginAction extends PluginAction {
 	
-	private final PortalService portalService = new PortalImpl();
+	private final PortalService portalService = PortalImpl.getInstance();
 
 	public static final String ACTION_NAME = "listFrames";
 	

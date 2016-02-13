@@ -42,7 +42,7 @@ public class GetSitePageChildrenPluginAction extends PluginAction {
 	
 	public static final String ACTION_NAME = "getSitePageChildren";
 	
-	private final SiteService siteService = new SiteImpl();
+	private final SiteService siteService = SiteImpl.getInstance();
 
 	private static final LogUtil LOGGER = LogUtil.getLogger(GetSitePageChildrenPluginAction.class);
 	
