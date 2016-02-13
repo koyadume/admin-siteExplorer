@@ -25,10 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.koyad.piston.core.model.Group;
 import org.koyad.piston.core.model.Page;
 import org.koyad.piston.core.model.Principal;
 import org.koyad.piston.core.model.SecurityAcl;
 import org.koyad.piston.core.model.Site;
+import org.koyad.piston.core.model.User;
 import org.koyad.piston.core.model.enums.PrincipalType;
 import org.koyad.piston.core.model.enums.Role;
 
@@ -66,9 +68,9 @@ public class PopulateFormUtil {
 			List<String> principals = new ArrayList<>();
 			for(Principal principal :  acl.getMembers()) {
 				String prefix  = "";
-				if(principal.getType().equals(PrincipalType.USER)) {
+				if(principal instanceof User) {
 					prefix = "user";
-				} else if(principal.getType().equals(PrincipalType.GROUP)) {
+				} else if(principal instanceof Group) {
 					prefix = "group";
 				}
 				principals.add(prefix + ":" + principal.getExternalId()); 

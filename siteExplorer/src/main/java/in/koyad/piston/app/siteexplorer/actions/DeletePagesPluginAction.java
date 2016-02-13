@@ -36,7 +36,7 @@ import in.koyad.piston.ui.utils.RequestContextUtil;
 )
 public class DeletePagesPluginAction extends PluginAction {
 	
-	private final SiteService siteService = new SiteImpl();
+	private final SiteService siteService = SiteImpl.getInstance();
 	
 	public static final String ACTION_NAME = "deletePages";
 

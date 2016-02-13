@@ -33,7 +33,7 @@ import in.koyad.piston.ui.utils.RequestContextUtil;
 )
 public class MovePagePluginAction extends PluginAction {
 	
-	private final SiteService siteService = new SiteImpl();
+	private final SiteService siteService = SiteImpl.getInstance();
 	
 	public static final String ACTION_NAME = "movePage";
 

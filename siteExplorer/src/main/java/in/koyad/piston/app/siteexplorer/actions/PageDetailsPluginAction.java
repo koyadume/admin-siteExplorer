@@ -35,7 +35,7 @@ public class PageDetailsPluginAction extends PluginAction {
 	
 	public static final String ACTION_NAME = "pageDetails";
 	
-	private final SiteService siteService = new SiteImpl();
+	private final SiteService siteService = SiteImpl.getInstance();
 
 	private static final LogUtil LOGGER = LogUtil.getLogger(PageDetailsPluginAction.class);
 	
