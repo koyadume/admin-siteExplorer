@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin:page xmlns="http://piston.koyad.in/html5" xmlns:plugin="http://piston.koyad.in/plugin"
-	xmlns:c="http://piston.koyad.in/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://piston.koyad.in/html5 http://piston.koyad.in/html5 
-						http://piston.koyad.in/plugin http://piston.koyad.in/plugin 
-						http://piston.koyad.in/core http://piston.koyad.in/core">
+<plugin:page xmlns="html5" xmlns:plugin="plugin"
+	xmlns:c="core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="html5 html5 
+						plugin plugin 
+						core core">
 	<plugin:body>
 		<!-- breadcrumb -->
     	<div style="padding: 5px; background-color: #94d5c5; overflow-y: auto; margin: 0px 5px; line-height: 1.5em;">
