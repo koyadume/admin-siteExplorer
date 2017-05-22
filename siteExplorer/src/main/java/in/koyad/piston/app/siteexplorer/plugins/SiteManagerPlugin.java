@@ -15,17 +15,17 @@
  */
 package in.koyad.piston.app.siteexplorer.plugins;
 
+import in.koyad.piston.app.api.annotation.AnnoPlugin;
+import in.koyad.piston.app.api.plugin.BasePlugin;
 import in.koyad.piston.app.siteexplorer.actions.ListSitesPluginAction;
-import in.koyad.piston.common.utils.LogUtil;
-import in.koyad.piston.controller.plugin.Plugin;
-import in.koyad.piston.controller.plugin.annotations.AnnoPlugin;
+import in.koyad.piston.common.util.LogUtil;
 
 @AnnoPlugin(
 	name = "siteManager", 
 	title = "Site Manager", 
 	defaultAction = ListSitesPluginAction.ACTION_NAME
 )
-public class SiteManagerPlugin extends Plugin {
+public class SiteManagerPlugin extends BasePlugin {
 
 	private static final LogUtil LOGGER = LogUtil
 			.getLogger(SiteManagerPlugin.class);

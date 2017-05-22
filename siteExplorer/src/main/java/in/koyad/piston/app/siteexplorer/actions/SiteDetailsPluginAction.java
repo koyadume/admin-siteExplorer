@@ -15,37 +15,37 @@
  */
 package in.koyad.piston.app.siteexplorer.actions;
 
+import org.koyad.piston.business.model.Site;
+
+import in.koyad.piston.app.api.annotation.AnnoPluginAction;
+import in.koyad.piston.app.api.model.Request;
+import in.koyad.piston.app.api.plugin.BasePluginAction;
 import in.koyad.piston.app.siteexplorer.forms.SiteDetailsPluginForm;
 import in.koyad.piston.app.siteexplorer.utils.PopulateFormUtil;
-import in.koyad.piston.common.exceptions.FrameworkException;
-import in.koyad.piston.common.utils.LogUtil;
-import in.koyad.piston.controller.plugin.PluginAction;
-import in.koyad.piston.controller.plugin.annotations.AnnoPluginAction;
-import in.koyad.piston.servicedelegate.model.PistonModelCache;
-import in.koyad.piston.ui.utils.RequestContextUtil;
-
-import org.koyad.piston.core.model.Site;
+import in.koyad.piston.cache.store.PortalDynamicCache;
+import in.koyad.piston.common.basic.exception.FrameworkException;
+import in.koyad.piston.common.util.LogUtil;
 
 @AnnoPluginAction(
 	name = SiteDetailsPluginAction.ACTION_NAME
 )
-public class SiteDetailsPluginAction extends PluginAction {
+public class SiteDetailsPluginAction extends BasePluginAction {
 	
 	public static final String ACTION_NAME = "siteDetails";
 
 	private static final LogUtil LOGGER = LogUtil.getLogger(SiteDetailsPluginAction.class);
 	
 	@Override
-	public String execute() throws FrameworkException {
+	public String execute(Request req) throws FrameworkException {
 		LOGGER.enterMethod("execute");
 		
-		String siteId = RequestContextUtil.getParameter("id");
-		RequestContextUtil.setRequestAttribute("frames", PistonModelCache.frames.values());
+		String siteId = req.getParameter("id");
+		req.setAttribute("frames", PortalDynamicCache.frames.values());
 		if(null != siteId) {
 			SiteDetailsPluginForm siteForm = new SiteDetailsPluginForm();
-			Site site = PistonModelCache.sites.get(siteId);
+			Site site = PortalDynamicCache.sites.get(siteId);
 			PopulateFormUtil.populateSiteDetails(siteForm, site);
-			RequestContextUtil.setRequestAttribute(SiteDetailsPluginForm.FORM_NAME, siteForm);
+			req.setAttribute(SiteDetailsPluginForm.FORM_NAME, siteForm);
 		}
 		
 		LOGGER.exitMethod("execute");

@@ -15,32 +15,34 @@
  */
 package in.koyad.piston.app.siteexplorer.utils;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
-import org.koyad.piston.core.model.Frame;
-import org.koyad.piston.core.model.Page;
-import org.koyad.piston.core.model.Resource;
-import org.koyad.piston.core.model.SecurityAcl;
-import org.koyad.piston.core.model.Site;
-import org.koyad.piston.core.model.embedded.PageMetadata;
-import org.koyad.piston.core.model.embedded.SiteMetadata;
-import org.koyad.piston.core.model.enums.Role;
+import org.koyad.piston.business.model.Frame;
+import org.koyad.piston.business.model.Members;
+import org.koyad.piston.business.model.Page;
+import org.koyad.piston.business.model.Resource;
+import org.koyad.piston.business.model.SecurityAcl;
+import org.koyad.piston.business.model.Site;
+import org.koyad.piston.business.model.embedded.PageMetadata;
+import org.koyad.piston.business.model.embedded.SiteMetadata;
+import org.koyad.piston.business.model.enums.RoleType;
 
 import in.koyad.piston.app.siteexplorer.forms.FrameDetailsPluginForm;
 import in.koyad.piston.app.siteexplorer.forms.PageDetailsPluginForm;
 import in.koyad.piston.app.siteexplorer.forms.ResourcePluginForm;
 import in.koyad.piston.app.siteexplorer.forms.SiteDetailsPluginForm;
-import in.koyad.piston.common.exceptions.FrameworkException;
-import in.koyad.piston.common.utils.BeanPropertyUtils;
-import in.koyad.piston.common.utils.StringUtil;
-import in.koyad.piston.core.sdk.api.PortalUserService;
-import in.koyad.piston.core.sdk.impl.PortalUserImpl;
-import in.koyad.piston.servicedelegate.model.PistonModelCache;
+import in.koyad.piston.cache.store.PortalDynamicCache;
+import in.koyad.piston.client.api.PortalUserStoreClient;
+import in.koyad.piston.common.basic.StringUtil;
+import in.koyad.piston.common.basic.exception.FrameworkException;
+import in.koyad.piston.common.util.BeanPropertyUtils;
+import in.koyad.piston.core.sdk.impl.PortalUserStoreClientImpl;
 
 public class ModelGenerator {
 	
-	private static final PortalUserService portalUserService = PortalUserImpl.getInstance();
+	private static final PortalUserStoreClient portalUserStoreClient = PortalUserStoreClientImpl.getInstance();
 
 	public static Site getSite(SiteDetailsPluginForm form) throws FrameworkException {
 		SiteMetadata metadata = new SiteMetadata();
@@ -54,7 +56,7 @@ public class ModelGenerator {
 		BeanPropertyUtils.copyProperties(site, form);
 		
 		//frame
-		site.setFrame(PistonModelCache.frames.get(form.getFrame()));
+		site.setFrameId(form.getFrameId());
 		
 		//acls
 		site.setAcls(getAcls(site, form));
@@ -75,18 +77,18 @@ public class ModelGenerator {
 //		Site site = null;
 //		if(StringUtil.isEmpty(form.getId())) {
 //			//This means its a new page and so site id must be present in the form.
-//			site = PistonModelCache.sites.get(form.getSiteId());
+//			site = PortalDynamicCache.sites.get(form.getSiteId());
 //		} else {
-//			site = PistonModelCache.pages.get(form.getId()).getSite();
+//			site = PortalDynamicCache.pages.get(form.getId()).getSite();
 //		}
 //		page.setSite(site);
 		
 		if(StringUtil.isEmpty(form.getId())) {
 			//This means its a new page and so position should be set.
 			if(StringUtil.isEmpty(metadata.getParentId())) {
-				metadata.setPosition(PistonModelCache.sites.get(form.getSiteId()).getRootPages().size() + 1);
+				metadata.setPosition(PortalDynamicCache.sites.get(form.getSiteId()).getRootPages().size() + 1);
 			} else {
-				metadata.setPosition(PistonModelCache.pages.get(metadata.getParentId()).getChildren().size() + 1);
+				metadata.setPosition(PortalDynamicCache.pages.get(metadata.getParentId()).getChildren().size() + 1);
 			}
 		}
 		
@@ -95,28 +97,37 @@ public class ModelGenerator {
 		return page;
 	}
 	
-	private static Set<SecurityAcl> getAcls(Resource res, ResourcePluginForm form) throws FrameworkException {
-		Set<SecurityAcl> acls = new HashSet<>();
+	private static List<SecurityAcl> getAcls(Resource res, ResourcePluginForm form) throws FrameworkException {
+		List<SecurityAcl> acls = new ArrayList<>();
 		if(null != form.getManager()) {
-			acls.add(getAcl(res, Role.MANAGER, form.getManager()));
+			acls.add(getAcl(res, RoleType.MANAGER, form.getManager()));
 		}
 		
 		if(null != form.getEditor()) {
-			acls.add(getAcl(res, Role.EDITOR, form.getEditor()));
+			acls.add(getAcl(res, RoleType.EDITOR, form.getEditor()));
 		}
 		
 		if(null != form.getUser()) {
-			acls.add(getAcl(res, Role.USER, form.getUser()));
+			acls.add(getAcl(res, RoleType.USER, form.getUser()));
 		}
 
 		return acls;
 	}
 	
-	private static SecurityAcl getAcl(Resource res, Role role, String[] typeAndExternalIds) throws FrameworkException {
+	private static SecurityAcl getAcl(Resource res, RoleType role, String[] typeAndExternalIds) throws FrameworkException {
 		SecurityAcl acl = new SecurityAcl();
-		acl.setResource(res);
 		acl.setRole(role);
-		acl.setMembers(portalUserService.getPrincipals(typeAndExternalIds));
+		List<String> users = new ArrayList<>();
+		List<String> groups = new ArrayList<>();
+		for(String typeAndExternalId : typeAndExternalIds) {
+			if(typeAndExternalId.startsWith("user:")) {
+				users.add(typeAndExternalId.split(Pattern.quote(":"))[1]);
+			} else if(typeAndExternalId.startsWith("group:")) {
+				groups.add(typeAndExternalId.split(Pattern.quote(":"))[1]);
+			}
+		}
+		Members members = new Members(users, groups);
+		acl.setMembers(members);
 		
 		return acl;
 	}

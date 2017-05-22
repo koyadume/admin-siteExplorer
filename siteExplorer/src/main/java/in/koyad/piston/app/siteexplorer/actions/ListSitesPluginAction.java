@@ -17,33 +17,33 @@ package in.koyad.piston.app.siteexplorer.actions;
 
 import java.util.List;
 
-import org.koyad.piston.core.model.Site;
+import org.koyad.piston.business.model.Site;
 
-import in.koyad.piston.common.exceptions.FrameworkException;
-import in.koyad.piston.common.utils.LogUtil;
-import in.koyad.piston.controller.plugin.PluginAction;
-import in.koyad.piston.controller.plugin.annotations.AnnoPluginAction;
-import in.koyad.piston.core.sdk.api.SiteService;
-import in.koyad.piston.core.sdk.impl.SiteImpl;
-import in.koyad.piston.ui.utils.RequestContextUtil;
+import in.koyad.piston.app.api.annotation.AnnoPluginAction;
+import in.koyad.piston.app.api.model.Request;
+import in.koyad.piston.app.api.plugin.BasePluginAction;
+import in.koyad.piston.client.api.SiteClient;
+import in.koyad.piston.common.basic.exception.FrameworkException;
+import in.koyad.piston.common.util.LogUtil;
+import in.koyad.piston.core.sdk.impl.SiteClientImpl;
 
 @AnnoPluginAction(
 	name = ListSitesPluginAction.ACTION_NAME
 )
-public class ListSitesPluginAction extends PluginAction {
+public class ListSitesPluginAction extends BasePluginAction {
 	
-	private final SiteService siteService = SiteImpl.getInstance();
+	private final SiteClient siteClient = SiteClientImpl.getInstance();
 
 	public static final String ACTION_NAME = "listSites";
 	
 	private static final LogUtil LOGGER = LogUtil.getLogger(ListSitesPluginAction.class);
 	
 	@Override
-	protected String execute() throws FrameworkException {
+	public String execute(Request req) throws FrameworkException {
 		LOGGER.enterMethod("execute");
 		
-		List<Site> sites = siteService.getSites();
-		RequestContextUtil.getRequest().setAttribute("sites", sites);
+		List<Site> sites = siteClient.getSites();
+		req.setAttribute("sites", sites);
 		
 		LOGGER.exitMethod("execute");
 		return "/pages/sites.xml";

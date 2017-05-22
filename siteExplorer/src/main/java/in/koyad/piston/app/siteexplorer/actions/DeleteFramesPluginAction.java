@@ -17,51 +17,50 @@ package in.koyad.piston.app.siteexplorer.actions;
 
 import java.util.Arrays;
 
+import in.koyad.piston.app.api.annotation.AnnoPluginAction;
+import in.koyad.piston.app.api.model.Request;
+import in.koyad.piston.app.api.plugin.BasePluginAction;
 import in.koyad.piston.app.siteexplorer.forms.DeleteFramesPluginForm;
-import in.koyad.piston.common.constants.FrameworkConstants;
+import in.koyad.piston.cache.store.PortalDynamicCache;
+import in.koyad.piston.client.api.PortalClient;
+import in.koyad.piston.common.basic.constant.FrameworkConstants;
+import in.koyad.piston.common.basic.exception.FrameworkException;
 import in.koyad.piston.common.constants.MsgType;
-import in.koyad.piston.common.exceptions.FrameworkException;
-import in.koyad.piston.common.utils.LogUtil;
-import in.koyad.piston.common.utils.Message;
-import in.koyad.piston.controller.plugin.PluginAction;
-import in.koyad.piston.controller.plugin.annotations.AnnoPluginAction;
-import in.koyad.piston.core.sdk.api.PortalService;
-import in.koyad.piston.core.sdk.impl.PortalImpl;
-import in.koyad.piston.servicedelegate.model.PistonModelCache;
-import in.koyad.piston.ui.utils.FormUtils;
-import in.koyad.piston.ui.utils.RequestContextUtil;
+import in.koyad.piston.common.util.LogUtil;
+import in.koyad.piston.common.util.Message;
+import in.koyad.piston.core.sdk.impl.PortalClientImpl;
 
 @AnnoPluginAction(
 	name = DeleteFramesPluginAction.ACTION_NAME
 )
-public class DeleteFramesPluginAction extends PluginAction {
+public class DeleteFramesPluginAction extends BasePluginAction {
 	
-	private final PortalService portalService = PortalImpl.getInstance();
+	private final PortalClient portalClient = PortalClientImpl.getInstance();
 	
 	public static final String ACTION_NAME = "deleteFrames";	
 	
 	private static final LogUtil LOGGER = LogUtil.getLogger(DeleteFramesPluginAction.class);
 	
 	@Override
-	protected String execute() throws FrameworkException {
+	public String execute(Request req) throws FrameworkException {
 		LOGGER.enterMethod("execute");
 		
 		DeleteFramesPluginForm form = null;
 		try {
 			//update in db
-			form = FormUtils.createFormWithReqParams(DeleteFramesPluginForm.class); 
+			form = req.getPluginForm(DeleteFramesPluginForm.class); 
 			String[] frameIds = form.getFrameIds();
-			portalService.deleteFrames(Arrays.asList(frameIds));
+			portalClient.deleteFrames(Arrays.asList(frameIds));
 			
 			//udpate data in cache
-			PistonModelCache.frames.removeAll(frameIds);
+			PortalDynamicCache.frames.removeAll(frameIds);
 			
-			RequestContextUtil.setRequestAttribute("msg", new Message(MsgType.INFO, "Frame(s) deleted successfully."));
+			req.setAttribute("msg", new Message(MsgType.INFO, "Frame(s) deleted successfully."));
 		} catch(FrameworkException ex) {
 			LOGGER.logException(ex);
-			RequestContextUtil.setRequestAttribute("msg", new Message(MsgType.ERROR, "Error occured while deleting frames."));
+			req.setAttribute("msg", new Message(MsgType.ERROR, "Error occured while deleting frames."));
 			
-			RequestContextUtil.setRequestAttribute(DeleteFramesPluginForm.FORM_NAME, form);
+			req.setAttribute(DeleteFramesPluginForm.FORM_NAME, form);
 		}
 		LOGGER.exitMethod("execute");
 		return FrameworkConstants.PREFIX_FORWARD + ListFramesPluginAction.ACTION_NAME;

@@ -17,25 +17,23 @@ package in.koyad.piston.app.siteexplorer.actions;
 
 import java.text.MessageFormat;
 
-import org.koyad.piston.core.model.Page;
+import org.koyad.piston.business.model.Page;
 
+import in.koyad.piston.app.api.annotation.AnnoPluginAction;
+import in.koyad.piston.app.api.model.Request;
+import in.koyad.piston.app.api.plugin.BasePluginAction;
 import in.koyad.piston.app.siteexplorer.forms.PageDetailsPluginForm;
 import in.koyad.piston.app.siteexplorer.utils.ModelGenerator;
-import in.koyad.piston.common.constants.FrameworkConstants;
+import in.koyad.piston.cache.store.PortalDynamicCache;
+import in.koyad.piston.client.api.SiteClient;
+import in.koyad.piston.common.basic.StringUtil;
+import in.koyad.piston.common.basic.constant.FrameworkConstants;
+import in.koyad.piston.common.basic.exception.FrameworkException;
 import in.koyad.piston.common.constants.Messages;
 import in.koyad.piston.common.constants.MsgType;
-import in.koyad.piston.common.exceptions.FrameworkException;
-import in.koyad.piston.common.utils.LogUtil;
-import in.koyad.piston.common.utils.Message;
-import in.koyad.piston.common.utils.StringUtil;
-import in.koyad.piston.controller.plugin.PluginAction;
-import in.koyad.piston.controller.plugin.annotations.AnnoPluginAction;
-import in.koyad.piston.core.sdk.api.SiteService;
-import in.koyad.piston.core.sdk.impl.SiteImpl;
-import in.koyad.piston.servicedelegate.model.PermissionsUtil;
-import in.koyad.piston.servicedelegate.model.PistonModelCache;
-import in.koyad.piston.ui.utils.FormUtils;
-import in.koyad.piston.ui.utils.RequestContextUtil;
+import in.koyad.piston.common.util.LogUtil;
+import in.koyad.piston.common.util.Message;
+import in.koyad.piston.core.sdk.impl.SiteClientImpl;
 
 /**
  * This action is used to update page metadata and its permissions. 
@@ -43,55 +41,55 @@ import in.koyad.piston.ui.utils.RequestContextUtil;
 @AnnoPluginAction(
 	name = SavePagePluginAction.ACTION_NAME
 )
-public class SavePagePluginAction extends PluginAction {
+public class SavePagePluginAction extends BasePluginAction {
 	
-	private final SiteService siteService = SiteImpl.getInstance();
+	private final SiteClient siteClient = SiteClientImpl.getInstance();
 	
 	public static final String ACTION_NAME = "savePage";
 
 	private static final LogUtil LOGGER = LogUtil.getLogger(SavePagePluginAction.class);
 	
 	@Override
-	public String execute() throws FrameworkException {
+	public String execute(Request req) throws FrameworkException {
 		LOGGER.enterMethod("execute");
 		
 		PageDetailsPluginForm form = null;
 		try {
 			//save data in db
-			form = FormUtils.createFormWithReqParams(PageDetailsPluginForm.class);
+			form = req.getPluginForm(PageDetailsPluginForm.class);
 			Page newData = ModelGenerator.getPage(form);
-			siteService.savePage(newData);
+			siteClient.savePage(newData);
 			
 			//update version in form
 			form.setVersion(newData.getVersion());
 			
 			//update data in cache
 			if(!StringUtil.isEmpty(form.getId())) {
-				Page oldData = PistonModelCache.pages.get(newData.getId());
+				Page oldData = PortalDynamicCache.pages.get(newData.getId());
 				oldData.refresh(newData);
 			}
 			
 			//update data in cache
 			if(StringUtil.isEmpty(form.getId())) {
-				PistonModelCache.sites.remove(form.getSiteId());
+				PortalDynamicCache.sites.remove(form.getSiteId());
 			} else {
-				PistonModelCache.sites.remove(PistonModelCache.pages.get(form.getId()).getSiteId());
+				PortalDynamicCache.sites.remove(PortalDynamicCache.pages.get(form.getId()).getSite().getId());
 			}
 			
 			//invalidate data in computation cache
-			PermissionsUtil.clearSiteTreePermissions(PistonModelCache.sites.get(newData.getSiteId()));
+//			PermissionsUtil.clearSiteTreePermissions(PortalDynamicCache.sites.get(newData.getSite().getId()));
 			
 			if(StringUtil.isEmpty(form.getId())) {
-				RequestContextUtil.setRequestAttribute("msg", new Message(MsgType.INFO, MessageFormat.format(Messages.RESOURCE_CREATED_SUCCESSFULLY, "Page")));
+				req.setAttribute("msg", new Message(MsgType.INFO, MessageFormat.format(Messages.RESOURCE_CREATED_SUCCESSFULLY, "Page")));
 			} else {
-				RequestContextUtil.setRequestAttribute("msg", new Message(MsgType.INFO, MessageFormat.format(Messages.RESOURCE_UPDATED_SUCCESSFULLY, "Page")));
+				req.setAttribute("msg", new Message(MsgType.INFO, MessageFormat.format(Messages.RESOURCE_UPDATED_SUCCESSFULLY, "Page")));
 			}
 		} catch(FrameworkException ex) {
 			LOGGER.logException(ex);
-			RequestContextUtil.setRequestAttribute("msg", new Message(MsgType.ERROR, "Error occured while updating page details."));
+			req.setAttribute("msg", new Message(MsgType.ERROR, "Error occured while updating page details."));
 		}
 		
-		RequestContextUtil.setRequestAttribute(PageDetailsPluginForm.FORM_NAME, form);
+		req.setAttribute(PageDetailsPluginForm.FORM_NAME, form);
 		
 		LOGGER.exitMethod("execute");
 		return FrameworkConstants.PREFIX_FORWARD + GetSitePageChildrenPluginAction.ACTION_NAME;

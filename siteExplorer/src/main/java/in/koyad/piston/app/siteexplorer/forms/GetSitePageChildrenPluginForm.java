@@ -15,8 +15,8 @@
  */
 package in.koyad.piston.app.siteexplorer.forms;
 
+import in.koyad.piston.app.api.annotation.AnnoPluginForm;
 import lombok.Data;
-import in.koyad.piston.controller.plugin.annotations.AnnoPluginForm;
 
 @AnnoPluginForm(name = GetSitePageChildrenPluginForm.FORM_NAME)
 @Data

@@ -17,23 +17,22 @@ package in.koyad.piston.app.siteexplorer.actions;
 
 import java.text.MessageFormat;
 
-import org.koyad.piston.core.model.Frame;
+import org.koyad.piston.business.model.Frame;
 
+import in.koyad.piston.app.api.annotation.AnnoPluginAction;
+import in.koyad.piston.app.api.model.Request;
+import in.koyad.piston.app.api.plugin.BasePluginAction;
 import in.koyad.piston.app.siteexplorer.forms.FrameDetailsPluginForm;
 import in.koyad.piston.app.siteexplorer.utils.ModelGenerator;
+import in.koyad.piston.cache.store.PortalDynamicCache;
+import in.koyad.piston.client.api.PortalClient;
+import in.koyad.piston.common.basic.StringUtil;
+import in.koyad.piston.common.basic.exception.FrameworkException;
 import in.koyad.piston.common.constants.Messages;
 import in.koyad.piston.common.constants.MsgType;
-import in.koyad.piston.common.exceptions.FrameworkException;
-import in.koyad.piston.common.utils.LogUtil;
-import in.koyad.piston.common.utils.Message;
-import in.koyad.piston.common.utils.StringUtil;
-import in.koyad.piston.controller.plugin.PluginAction;
-import in.koyad.piston.controller.plugin.annotations.AnnoPluginAction;
-import in.koyad.piston.core.sdk.api.PortalService;
-import in.koyad.piston.core.sdk.impl.PortalImpl;
-import in.koyad.piston.servicedelegate.model.PistonModelCache;
-import in.koyad.piston.ui.utils.FormUtils;
-import in.koyad.piston.ui.utils.RequestContextUtil;
+import in.koyad.piston.common.util.LogUtil;
+import in.koyad.piston.common.util.Message;
+import in.koyad.piston.core.sdk.impl.PortalClientImpl;
 
 /**
  * This action is used to update frame details.
@@ -41,22 +40,22 @@ import in.koyad.piston.ui.utils.RequestContextUtil;
 @AnnoPluginAction(
 	name = SaveFramePluginAction.ACTION_NAME
 )
-public class SaveFramePluginAction extends PluginAction {
+public class SaveFramePluginAction extends BasePluginAction {
 	
-	private final PortalService portalService = PortalImpl.getInstance();
+	private final PortalClient portalClient = PortalClientImpl.getInstance();
 
 	public static final String ACTION_NAME = "saveFrame";	
 	
 	private static final LogUtil LOGGER = LogUtil.getLogger(SaveFramePluginAction.class);
 	
 	@Override
-	protected String execute() throws FrameworkException {
+	public String execute(Request req) throws FrameworkException {
 		LOGGER.enterMethod("execute");
 		
 		FrameDetailsPluginForm form = null;
 		try {
 			//update data in db
-			form = FormUtils.createFormWithReqParams(FrameDetailsPluginForm.class);
+			form = req.getPluginForm(FrameDetailsPluginForm.class);
 			
 			boolean update = true;
 			if(StringUtil.isEmpty(form.getId())) {
@@ -64,31 +63,31 @@ public class SaveFramePluginAction extends PluginAction {
 			}
 			
 			Frame newData = ModelGenerator.getFrame(form);
-			portalService.saveFrame(newData);
+			portalClient.saveFrame(newData);
 			
 			//update version in form
 			form.setVersion(newData.getVersion());
 			
 			//update data in cache if it is update operation
 			if(update) {
-				Frame oldData = PistonModelCache.frames.get(newData.getId());
+				Frame oldData = PortalDynamicCache.frames.get(newData.getId());
 				oldData.refresh(newData);
 			} else {
-				PistonModelCache.frames.get(newData.getId());
+				PortalDynamicCache.frames.get(newData.getId());
 			}
 			
 			if(!update) {
 				form.setId(newData.getId());
-				RequestContextUtil.setRequestAttribute("msg", new Message(MsgType.INFO, MessageFormat.format(Messages.RESOURCE_CREATED_SUCCESSFULLY, "Frame")));
+				req.setAttribute("msg", new Message(MsgType.INFO, MessageFormat.format(Messages.RESOURCE_CREATED_SUCCESSFULLY, "Frame")));
 			} else {
-				RequestContextUtil.setRequestAttribute("msg", new Message(MsgType.INFO, MessageFormat.format(Messages.RESOURCE_UPDATED_SUCCESSFULLY, "Frame")));
+				req.setAttribute("msg", new Message(MsgType.INFO, MessageFormat.format(Messages.RESOURCE_UPDATED_SUCCESSFULLY, "Frame")));
 			}
 		} catch(FrameworkException ex) {
 			LOGGER.logException(ex);
-			RequestContextUtil.setRequestAttribute("msg", new Message(MsgType.ERROR, "Error occured while updating frame details."));
+			req.setAttribute("msg", new Message(MsgType.ERROR, "Error occured while updating frame details."));
 		}
 		
-		RequestContextUtil.setRequestAttribute(FrameDetailsPluginForm.FORM_NAME, form);
+		req.setAttribute(FrameDetailsPluginForm.FORM_NAME, form);
 		
 		LOGGER.exitMethod("execute");
 		return "/pages/frameDetails.xml";

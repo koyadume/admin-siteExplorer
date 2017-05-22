@@ -15,44 +15,44 @@
  */
 package in.koyad.piston.app.siteexplorer.actions;
 
-import org.koyad.piston.core.model.Page;
+import org.koyad.piston.business.model.Page;
 
+import in.koyad.piston.app.api.annotation.AnnoPluginAction;
+import in.koyad.piston.app.api.model.Request;
+import in.koyad.piston.app.api.plugin.BasePluginAction;
 import in.koyad.piston.app.siteexplorer.forms.PageDetailsPluginForm;
 import in.koyad.piston.app.siteexplorer.utils.PopulateFormUtil;
-import in.koyad.piston.common.exceptions.FrameworkException;
-import in.koyad.piston.common.utils.LogUtil;
-import in.koyad.piston.controller.plugin.PluginAction;
-import in.koyad.piston.controller.plugin.annotations.AnnoPluginAction;
-import in.koyad.piston.core.sdk.api.SiteService;
-import in.koyad.piston.core.sdk.impl.SiteImpl;
-import in.koyad.piston.servicedelegate.model.PistonModelCache;
-import in.koyad.piston.ui.utils.RequestContextUtil;
+import in.koyad.piston.cache.store.PortalDynamicCache;
+import in.koyad.piston.client.api.SiteClient;
+import in.koyad.piston.common.basic.exception.FrameworkException;
+import in.koyad.piston.common.util.LogUtil;
+import in.koyad.piston.core.sdk.impl.SiteClientImpl;
 
 @AnnoPluginAction(
 	name = PageDetailsPluginAction.ACTION_NAME
 )
-public class PageDetailsPluginAction extends PluginAction {
+public class PageDetailsPluginAction extends BasePluginAction {
 	
 	public static final String ACTION_NAME = "pageDetails";
 	
-	private final SiteService siteService = SiteImpl.getInstance();
+	private final SiteClient siteClient = SiteClientImpl.getInstance();
 
 	private static final LogUtil LOGGER = LogUtil.getLogger(PageDetailsPluginAction.class);
 	
 	@Override
-	public String execute() throws FrameworkException {
+	public String execute(Request req) throws FrameworkException {
 		LOGGER.enterMethod("execute");
 		
-		String pageId = RequestContextUtil.getParameter("id");
+		String pageId = req.getParameter("id");
 		
 		if(null != pageId) {
 			PageDetailsPluginForm pageform = new PageDetailsPluginForm();
-			Page page = PistonModelCache.pages.get(pageId);
+			Page page = PortalDynamicCache.pages.get(pageId);
 			PopulateFormUtil.populatePageDetails(pageform, page);
-			RequestContextUtil.setRequestAttribute(PageDetailsPluginForm.FORM_NAME, pageform);
+			req.setAttribute(PageDetailsPluginForm.FORM_NAME, pageform);
 		}
 		
-		RequestContextUtil.setRequestAttribute("sites", siteService.getSites());
+		req.setAttribute("sites", siteClient.getSites());
 		
 		LOGGER.exitMethod("execute");
 		return "/pages/pageDetails.xml";

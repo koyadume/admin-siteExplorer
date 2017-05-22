@@ -17,33 +17,33 @@ package in.koyad.piston.app.siteexplorer.actions;
 
 import java.util.List;
 
-import org.koyad.piston.core.model.Frame;
+import org.koyad.piston.business.model.Frame;
 
-import in.koyad.piston.common.exceptions.FrameworkException;
-import in.koyad.piston.common.utils.LogUtil;
-import in.koyad.piston.controller.plugin.PluginAction;
-import in.koyad.piston.controller.plugin.annotations.AnnoPluginAction;
-import in.koyad.piston.core.sdk.api.PortalService;
-import in.koyad.piston.core.sdk.impl.PortalImpl;
-import in.koyad.piston.ui.utils.RequestContextUtil;
+import in.koyad.piston.app.api.annotation.AnnoPluginAction;
+import in.koyad.piston.app.api.model.Request;
+import in.koyad.piston.app.api.plugin.BasePluginAction;
+import in.koyad.piston.client.api.PortalClient;
+import in.koyad.piston.common.basic.exception.FrameworkException;
+import in.koyad.piston.common.util.LogUtil;
+import in.koyad.piston.core.sdk.impl.PortalClientImpl;
 
 @AnnoPluginAction(
 	name = ListFramesPluginAction.ACTION_NAME
 )
-public class ListFramesPluginAction extends PluginAction {
+public class ListFramesPluginAction extends BasePluginAction {
 	
-	private final PortalService portalService = PortalImpl.getInstance();
+	private final PortalClient portalClient = PortalClientImpl.getInstance();
 
 	public static final String ACTION_NAME = "listFrames";
 	
 	private static final LogUtil LOGGER = LogUtil.getLogger(ListFramesPluginAction.class);
 	
 	@Override
-	protected String execute() throws FrameworkException {
+	public String execute(Request req) throws FrameworkException {
 		LOGGER.enterMethod("execute");
 		
-		List<Frame> frames = portalService.getFrames();
-		RequestContextUtil.getRequest().setAttribute("frames", frames);
+		List<Frame> frames = portalClient.getFrames();
+		req.setAttribute("frames", frames);
 		
 		LOGGER.exitMethod("execute");
 		return "/pages/frames.xml";

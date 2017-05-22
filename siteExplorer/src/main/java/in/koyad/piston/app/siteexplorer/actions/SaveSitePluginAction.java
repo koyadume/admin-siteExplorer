@@ -17,24 +17,22 @@ package in.koyad.piston.app.siteexplorer.actions;
 
 import java.text.MessageFormat;
 
-import org.koyad.piston.core.model.Site;
+import org.koyad.piston.business.model.Site;
 
+import in.koyad.piston.app.api.annotation.AnnoPluginAction;
+import in.koyad.piston.app.api.model.Request;
+import in.koyad.piston.app.api.plugin.BasePluginAction;
 import in.koyad.piston.app.siteexplorer.forms.SiteDetailsPluginForm;
 import in.koyad.piston.app.siteexplorer.utils.ModelGenerator;
+import in.koyad.piston.cache.store.PortalDynamicCache;
+import in.koyad.piston.client.api.SiteClient;
+import in.koyad.piston.common.basic.StringUtil;
+import in.koyad.piston.common.basic.exception.FrameworkException;
 import in.koyad.piston.common.constants.Messages;
 import in.koyad.piston.common.constants.MsgType;
-import in.koyad.piston.common.exceptions.FrameworkException;
-import in.koyad.piston.common.utils.LogUtil;
-import in.koyad.piston.common.utils.Message;
-import in.koyad.piston.common.utils.StringUtil;
-import in.koyad.piston.controller.plugin.PluginAction;
-import in.koyad.piston.controller.plugin.annotations.AnnoPluginAction;
-import in.koyad.piston.core.sdk.api.SiteService;
-import in.koyad.piston.core.sdk.impl.SiteImpl;
-import in.koyad.piston.servicedelegate.model.PermissionsUtil;
-import in.koyad.piston.servicedelegate.model.PistonModelCache;
-import in.koyad.piston.ui.utils.FormUtils;
-import in.koyad.piston.ui.utils.RequestContextUtil;
+import in.koyad.piston.common.util.LogUtil;
+import in.koyad.piston.common.util.Message;
+import in.koyad.piston.core.sdk.impl.SiteClientImpl;
 
 /**
  * This action is used to update site metadata and its permissions. 
@@ -42,47 +40,47 @@ import in.koyad.piston.ui.utils.RequestContextUtil;
 @AnnoPluginAction(
 	name = SaveSitePluginAction.ACTION_NAME
 )
-public class SaveSitePluginAction extends PluginAction {
+public class SaveSitePluginAction extends BasePluginAction {
 	
-	private final SiteService siteService = SiteImpl.getInstance();
+	private final SiteClient siteClient = SiteClientImpl.getInstance();
 	
 	public static final String ACTION_NAME = "saveSite";
 
 	private static final LogUtil LOGGER = LogUtil.getLogger(SaveSitePluginAction.class);
 	
 	@Override
-	protected String execute() throws FrameworkException {
+	public String execute(Request req) throws FrameworkException {
 		LOGGER.enterMethod("execute");
 		
 		SiteDetailsPluginForm form = null;
 		try {
 			//save data in db
-			form = FormUtils.createFormWithReqParams(SiteDetailsPluginForm.class);
+			form = req.getPluginForm(SiteDetailsPluginForm.class);
 			Site newData = ModelGenerator.getSite(form);
-			siteService.saveSite(newData);
+			siteClient.saveSite(newData);
 			
 			//update version in form
 			form.setVersion(newData.getVersion());
 			
 			//update data in cache
-			Site oldData = PistonModelCache.sites.get(newData.getId());
+			Site oldData = PortalDynamicCache.sites.get(newData.getId());
 			oldData.refresh(newData);
 			
 			//invalidate data in computation cache
-			PermissionsUtil.clearSiteTreePermissions(newData);
+//			PermissionsUtil.clearSiteTreePermissions(newData);
 			
 			if(StringUtil.isEmpty(form.getId())) {
-				RequestContextUtil.setRequestAttribute("msg", new Message(MsgType.INFO, MessageFormat.format(Messages.RESOURCE_CREATED_SUCCESSFULLY, "Site")));
+				req.setAttribute("msg", new Message(MsgType.INFO, MessageFormat.format(Messages.RESOURCE_CREATED_SUCCESSFULLY, "Site")));
 			} else {
-				RequestContextUtil.setRequestAttribute("msg", new Message(MsgType.INFO, MessageFormat.format(Messages.RESOURCE_UPDATED_SUCCESSFULLY, "Site")));
+				req.setAttribute("msg", new Message(MsgType.INFO, MessageFormat.format(Messages.RESOURCE_UPDATED_SUCCESSFULLY, "Site")));
 			}
 		} catch(FrameworkException ex) {
 			LOGGER.logException(ex);
-			RequestContextUtil.setRequestAttribute("msg", new Message(MsgType.ERROR, "Error occured while updating site details."));
+			req.setAttribute("msg", new Message(MsgType.ERROR, "Error occured while updating site details."));
 		}
 		
-		RequestContextUtil.setRequestAttribute("frames", PistonModelCache.frames.values());
-		RequestContextUtil.setRequestAttribute(SiteDetailsPluginForm.FORM_NAME, form);
+		req.setAttribute("frames", PortalDynamicCache.frames.values());
+		req.setAttribute(SiteDetailsPluginForm.FORM_NAME, form);
 		
 		LOGGER.exitMethod("execute");
 		return "/pages/siteDetails.xml";

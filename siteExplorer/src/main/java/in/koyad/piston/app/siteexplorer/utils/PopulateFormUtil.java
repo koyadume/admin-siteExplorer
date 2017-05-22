@@ -15,24 +15,19 @@
  */
 package in.koyad.piston.app.siteexplorer.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.koyad.piston.business.model.Page;
+import org.koyad.piston.business.model.SecurityAcl;
+import org.koyad.piston.business.model.Site;
+import org.koyad.piston.business.model.enums.RoleType;
+
 import in.koyad.piston.app.siteexplorer.forms.PageDetailsPluginForm;
 import in.koyad.piston.app.siteexplorer.forms.ResourcePluginForm;
 import in.koyad.piston.app.siteexplorer.forms.SiteDetailsPluginForm;
-import in.koyad.piston.common.utils.LogUtil;
-import in.koyad.piston.common.utils.BeanPropertyUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import org.koyad.piston.core.model.Group;
-import org.koyad.piston.core.model.Page;
-import org.koyad.piston.core.model.Principal;
-import org.koyad.piston.core.model.SecurityAcl;
-import org.koyad.piston.core.model.Site;
-import org.koyad.piston.core.model.User;
-import org.koyad.piston.core.model.enums.PrincipalType;
-import org.koyad.piston.core.model.enums.Role;
+import in.koyad.piston.common.util.BeanPropertyUtils;
+import in.koyad.piston.common.util.LogUtil;
 
 public class PopulateFormUtil {
 
@@ -43,7 +38,7 @@ public class PopulateFormUtil {
 		BeanPropertyUtils.copyProperties(form, site);
 		
 		//copy frame name
-		form.setFrame(site.getFrame().getId());
+		form.setFrameId(site.getFrameId());
 		
 		//copy title, mapping etc.
 		BeanPropertyUtils.copyProperties(form, site.getMetadata());
@@ -63,20 +58,23 @@ public class PopulateFormUtil {
 		copyAcls(page.getAcls(), form);
 	}
 	
-	private static void copyAcls(Set<SecurityAcl> acls, ResourcePluginForm form) {
+	private static void copyAcls(List<SecurityAcl> acls, ResourcePluginForm form) {
 		for(SecurityAcl acl : acls) {
 			List<String> principals = new ArrayList<>();
-			for(Principal principal :  acl.getMembers()) {
-				String prefix  = "";
-				if(principal instanceof User) {
-					prefix = "user";
-				} else if(principal instanceof Group) {
-					prefix = "group";
-				}
-				principals.add(prefix + ":" + principal.getExternalId()); 
-			}
-			Role role = acl.getRole();
-			switch(role) {
+			acl.getMembers().getUsers().forEach(user -> principals.add("user:".concat(user)));
+			acl.getMembers().getGroups().forEach(group -> principals.add("group:".concat(group)));
+			
+//			for(Principal principal :  acl.getMembers()) {
+//				String prefix  = "";
+//				if(principal instanceof User) {
+//					prefix = "user";
+//				} else if(principal instanceof Group) {
+//					prefix = "group";
+//				}
+//				principals.add(prefix + ":" + principal.getExternalId()); 
+//			}
+			RoleType roleType = acl.getRole();
+			switch(roleType) {
 				case MANAGER:
 					form.setManager(principals.toArray(new String[principals.size()]));
 					break;
@@ -87,7 +85,7 @@ public class PopulateFormUtil {
 					form.setUser(principals.toArray(new String[principals.size()]));
 					break;
 				default:
-					LOGGER.info("No match found.");
+					LOGGER.debug("No match found.");
 			}
 		}
 	}

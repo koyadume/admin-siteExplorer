@@ -15,42 +15,42 @@
  */
 package in.koyad.piston.app.siteexplorer.actions;
 
-import org.koyad.piston.core.model.Frame;
+import org.koyad.piston.business.model.Frame;
 
+import in.koyad.piston.app.api.annotation.AnnoPluginAction;
+import in.koyad.piston.app.api.model.Request;
+import in.koyad.piston.app.api.plugin.BasePluginAction;
 import in.koyad.piston.app.siteexplorer.forms.FrameDetailsPluginForm;
-import in.koyad.piston.common.exceptions.FrameworkException;
-import in.koyad.piston.common.utils.BeanPropertyUtils;
-import in.koyad.piston.common.utils.LogUtil;
-import in.koyad.piston.controller.plugin.PluginAction;
-import in.koyad.piston.controller.plugin.annotations.AnnoPluginAction;
-import in.koyad.piston.core.sdk.api.PortalService;
-import in.koyad.piston.core.sdk.impl.PortalImpl;
-import in.koyad.piston.ui.utils.RequestContextUtil;
+import in.koyad.piston.client.api.PortalClient;
+import in.koyad.piston.common.basic.exception.FrameworkException;
+import in.koyad.piston.common.util.BeanPropertyUtils;
+import in.koyad.piston.common.util.LogUtil;
+import in.koyad.piston.core.sdk.impl.PortalClientImpl;
 
 @AnnoPluginAction(
 	name = FrameDetailsPluginAction.ACTION_NAME
 )
-public class FrameDetailsPluginAction extends PluginAction {
+public class FrameDetailsPluginAction extends BasePluginAction {
 	
-	private final PortalService portalService = PortalImpl.getInstance();
+	private final PortalClient portalClient = PortalClientImpl.getInstance();
 	
 	public static final String ACTION_NAME = "frameDetails";
 
 	private static final LogUtil LOGGER = LogUtil.getLogger(FrameDetailsPluginAction.class);
 	
 	@Override
-	public String execute() throws FrameworkException {
+	public String execute(Request req) throws FrameworkException {
 		LOGGER.enterMethod("execute");
 		
-		String frameId = RequestContextUtil.getParameter("id");
+		String frameId = req.getParameter("id");
 		
 		if(null != frameId) {
-			Frame frame = portalService.getFrame(frameId);
+			Frame frame = portalClient.getFrame(frameId);
 
 			FrameDetailsPluginForm frameForm = new FrameDetailsPluginForm();
 			BeanPropertyUtils.copyProperties(frameForm, frame);
 			
-			RequestContextUtil.setRequestAttribute(FrameDetailsPluginForm.FORM_NAME, frameForm);
+			req.setAttribute(FrameDetailsPluginForm.FORM_NAME, frameForm);
 		}
 			
 		LOGGER.exitMethod("execute");

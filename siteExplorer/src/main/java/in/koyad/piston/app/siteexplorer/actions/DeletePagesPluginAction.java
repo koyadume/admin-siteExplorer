@@ -17,50 +17,49 @@ package in.koyad.piston.app.siteexplorer.actions;
 
 import java.util.Arrays;
 
+import in.koyad.piston.app.api.annotation.AnnoPluginAction;
+import in.koyad.piston.app.api.model.Request;
+import in.koyad.piston.app.api.plugin.BasePluginAction;
 import in.koyad.piston.app.siteexplorer.forms.DeletePagesPluginForm;
-import in.koyad.piston.common.constants.FrameworkConstants;
+import in.koyad.piston.cache.store.PortalDynamicCache;
+import in.koyad.piston.client.api.SiteClient;
+import in.koyad.piston.common.basic.constant.FrameworkConstants;
+import in.koyad.piston.common.basic.exception.FrameworkException;
 import in.koyad.piston.common.constants.MsgType;
-import in.koyad.piston.common.exceptions.FrameworkException;
-import in.koyad.piston.common.utils.LogUtil;
-import in.koyad.piston.common.utils.Message;
-import in.koyad.piston.controller.plugin.PluginAction;
-import in.koyad.piston.controller.plugin.annotations.AnnoPluginAction;
-import in.koyad.piston.core.sdk.api.SiteService;
-import in.koyad.piston.core.sdk.impl.SiteImpl;
-import in.koyad.piston.servicedelegate.model.PistonModelCache;
-import in.koyad.piston.ui.utils.FormUtils;
-import in.koyad.piston.ui.utils.RequestContextUtil;
+import in.koyad.piston.common.util.LogUtil;
+import in.koyad.piston.common.util.Message;
+import in.koyad.piston.core.sdk.impl.SiteClientImpl;
 
 @AnnoPluginAction(
 	name = DeletePagesPluginAction.ACTION_NAME
 )
-public class DeletePagesPluginAction extends PluginAction {
+public class DeletePagesPluginAction extends BasePluginAction {
 	
-	private final SiteService siteService = SiteImpl.getInstance();
+	private final SiteClient siteClient = SiteClientImpl.getInstance();
 	
 	public static final String ACTION_NAME = "deletePages";
 
 	private static final LogUtil LOGGER = LogUtil.getLogger(DeletePagesPluginAction.class);
 	
 	@Override
-	protected String execute() throws FrameworkException {
+	public String execute(Request req) throws FrameworkException {
 		LOGGER.enterMethod("execute");
 	
 		DeletePagesPluginForm form = null;
 		try {
 			//update data in db
-			form = FormUtils.createFormWithReqParams(DeletePagesPluginForm.class);
-			siteService.deletePages(Arrays.asList(form.getPageIds()));
+			form = req.getPluginForm(DeletePagesPluginForm.class);
+			siteClient.deletePages(Arrays.asList(form.getPageIds()));
 			
 			//update data in cache
-			PistonModelCache.sites.remove(form.getSiteId());
+			PortalDynamicCache.sites.remove(form.getSiteId());
 			
-			RequestContextUtil.setRequestAttribute("msg", new Message(MsgType.INFO, "Pages deleted successfully."));
+			req.setAttribute("msg", new Message(MsgType.INFO, "Pages deleted successfully."));
 		} catch(FrameworkException ex) {
 			LOGGER.logException(ex);
-			RequestContextUtil.setRequestAttribute("msg", new Message(MsgType.ERROR, "Error occured while deleting pages."));
+			req.setAttribute("msg", new Message(MsgType.ERROR, "Error occured while deleting pages."));
 			
-			RequestContextUtil.setRequestAttribute(DeletePagesPluginForm.FORM_NAME, form);
+			req.setAttribute(DeletePagesPluginForm.FORM_NAME, form);
 		}
 			
 		LOGGER.exitMethod("execute");
