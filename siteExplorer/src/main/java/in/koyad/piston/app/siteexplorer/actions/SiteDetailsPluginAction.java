@@ -49,7 +49,7 @@ public class SiteDetailsPluginAction extends BasePluginAction {
 		}
 		
 		LOGGER.exitMethod("execute");
-		return "/pages/siteDetails.xml";
+		return "/siteDetails.xml";
 	}
 
 }

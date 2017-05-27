@@ -46,7 +46,7 @@ public class ListSitesPluginAction extends BasePluginAction {
 		req.setAttribute("sites", sites);
 		
 		LOGGER.exitMethod("execute");
-		return "/pages/sites.xml";
+		return "/sites.xml";
 	}
 
 }

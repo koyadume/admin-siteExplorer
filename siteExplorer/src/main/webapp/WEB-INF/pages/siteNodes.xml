@@ -77,7 +77,7 @@
 													<td>
 														<plugin:actionURL action="getSitePageChildren" style="text-decoration: none;">
 															<c:out value="${page.metadata.title}" />
-															<plugin:param name="siteId" value="${page.siteId}" />
+															<plugin:param name="siteId" value="${page.site.id}" />
 															<plugin:param name="parentId" value="${page.id}" />
 														</plugin:actionURL>
 													</td>

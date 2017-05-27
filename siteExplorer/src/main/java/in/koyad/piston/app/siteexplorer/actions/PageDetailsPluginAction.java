@@ -55,7 +55,7 @@ public class PageDetailsPluginAction extends BasePluginAction {
 		req.setAttribute("sites", siteClient.getSites());
 		
 		LOGGER.exitMethod("execute");
-		return "/pages/pageDetails.xml";
+		return "/pageDetails.xml";
 	}
 
 }

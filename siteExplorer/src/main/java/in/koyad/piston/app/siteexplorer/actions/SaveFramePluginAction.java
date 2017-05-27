@@ -90,7 +90,7 @@ public class SaveFramePluginAction extends BasePluginAction {
 		req.setAttribute(FrameDetailsPluginForm.FORM_NAME, form);
 		
 		LOGGER.exitMethod("execute");
-		return "/pages/frameDetails.xml";
+		return "/frameDetails.xml";
 	}
 
 }

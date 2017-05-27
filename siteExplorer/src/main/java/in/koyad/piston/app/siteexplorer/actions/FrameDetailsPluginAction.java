@@ -54,7 +54,7 @@ public class FrameDetailsPluginAction extends BasePluginAction {
 		}
 			
 		LOGGER.exitMethod("execute");
-		return "/pages/frameDetails.xml";
+		return "/frameDetails.xml";
 	}
 
 }

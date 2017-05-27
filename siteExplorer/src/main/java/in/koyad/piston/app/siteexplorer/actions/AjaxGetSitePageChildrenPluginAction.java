@@ -86,7 +86,7 @@ public class AjaxGetSitePageChildrenPluginAction extends BasePluginAction {
 //					break;
 //			}
 //		} else {
-//			view = "/pages/siteNodes.xml"; 
+//			view = "/siteNodes.xml"; 
 //		}
 		
 		LOGGER.exitMethod("execute");

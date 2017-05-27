@@ -83,7 +83,7 @@ public class SaveSitePluginAction extends BasePluginAction {
 		req.setAttribute(SiteDetailsPluginForm.FORM_NAME, form);
 		
 		LOGGER.exitMethod("execute");
-		return "/pages/siteDetails.xml";
+		return "/siteDetails.xml";
 	}
 
 }

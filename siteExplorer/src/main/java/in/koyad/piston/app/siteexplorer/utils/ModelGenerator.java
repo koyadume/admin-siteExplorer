@@ -74,14 +74,14 @@ public class ModelGenerator {
 		//id, name, siteId
 		BeanPropertyUtils.copyProperties(page, form);
 		
-//		Site site = null;
-//		if(StringUtil.isEmpty(form.getId())) {
-//			//This means its a new page and so site id must be present in the form.
-//			site = PortalDynamicCache.sites.get(form.getSiteId());
-//		} else {
-//			site = PortalDynamicCache.pages.get(form.getId()).getSite();
-//		}
-//		page.setSite(site);
+		Site site = null;
+		if(StringUtil.isEmpty(form.getId())) {
+			//This means its a new page and so site id must be present in the form.
+			site = PortalDynamicCache.sites.get(form.getSiteId());
+		} else {
+			site = PortalDynamicCache.pages.get(form.getId()).getSite();
+		}
+		page.setSite(site);
 		
 		if(StringUtil.isEmpty(form.getId())) {
 			//This means its a new page and so position should be set.

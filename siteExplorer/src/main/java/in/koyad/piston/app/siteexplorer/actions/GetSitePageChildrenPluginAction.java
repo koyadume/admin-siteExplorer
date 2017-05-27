@@ -86,7 +86,7 @@ public class GetSitePageChildrenPluginAction extends BasePluginAction {
 			req.setAttribute("children", children);
 		}
 		
-		String view = "/pages/siteNodes.xml"; 
+		String view = "/siteNodes.xml"; 
 //		String scenario = req.getParameter(FrameworkConstants.SCENARIO);
 //		if(null != scenario) {
 //			switch(scenario){
@@ -95,7 +95,7 @@ public class GetSitePageChildrenPluginAction extends BasePluginAction {
 //					break;
 //			}
 //		} else {
-//			view = "/pages/siteNodes.xml"; 
+//			view = "/siteNodes.xml"; 
 //		}
 		
 		LOGGER.exitMethod("execute");

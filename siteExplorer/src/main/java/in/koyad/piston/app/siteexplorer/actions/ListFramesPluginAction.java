@@ -46,7 +46,7 @@ public class ListFramesPluginAction extends BasePluginAction {
 		req.setAttribute("frames", frames);
 		
 		LOGGER.exitMethod("execute");
-		return "/pages/frames.xml";
+		return "/frames.xml";
 	}
 
 }
