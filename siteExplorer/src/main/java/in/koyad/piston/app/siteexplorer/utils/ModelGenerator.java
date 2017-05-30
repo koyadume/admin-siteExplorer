@@ -34,16 +34,12 @@ import in.koyad.piston.app.siteexplorer.forms.PageDetailsPluginForm;
 import in.koyad.piston.app.siteexplorer.forms.ResourcePluginForm;
 import in.koyad.piston.app.siteexplorer.forms.SiteDetailsPluginForm;
 import in.koyad.piston.cache.store.PortalDynamicCache;
-import in.koyad.piston.client.api.PortalUserStoreClient;
 import in.koyad.piston.common.basic.StringUtil;
 import in.koyad.piston.common.basic.exception.FrameworkException;
 import in.koyad.piston.common.util.BeanPropertyUtils;
-import in.koyad.piston.core.sdk.impl.PortalUserStoreClientImpl;
 
 public class ModelGenerator {
 	
-	private static final PortalUserStoreClient portalUserStoreClient = PortalUserStoreClientImpl.getInstance();
-
 	public static Site getSite(SiteDetailsPluginForm form) throws FrameworkException {
 		SiteMetadata metadata = new SiteMetadata();
 		//title

@@ -33,7 +33,7 @@
 						</c:iterate>
 				</table>
 				
-				<p style="padding-left: 10px;">
+				<p class="btn-bar">
 					<pButton class="pt-btn pseudo-submit-button" faClass="fa fa-trash fa-lg" faStyle="font-size: 1.2em; padding-right: 6px;"> 
 	  					<c:out value="Delete" />
 	  				</pButton>

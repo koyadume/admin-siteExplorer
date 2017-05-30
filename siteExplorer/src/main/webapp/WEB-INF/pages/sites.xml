@@ -2,9 +2,18 @@
 <plugin:page xmlns="html5" xmlns:plugin="plugin" xmlns:c="core">
 	<plugin:body>
 		<c:if test="${not empty msg}">
-			<p>
+			<c:if test="${msg.type eq 'info'}">
+				<c:set var="wrapperClass" value="success" />
+				<c:set var="msgIconClass" value="check-circle" />
+			</c:if>
+			<c:if test="${msg.type eq 'error'}">
+				<c:set var="wrapperClass" value="danger" />
+				<c:set var="msgIconClass" value="times-circle" />
+			</c:if>
+			<div style="margin: 10px 10px 2px;" class="alert alert-${wrapperClass}" role="alert">
+				<span class="fa fa-${msgIconClass} fa-lg" style="margin-right: 0.5rem"></span>
 				<c:out value="${msg.details}"/>
-			</p>
+			</div>
 		</c:if>
 		
 		<div style="padding: 10px;">
@@ -34,7 +43,7 @@
 						</c:iterate>
 				</table>
 				
-				<p style="padding-left: 10px;">
+				<p class="btn-bar">
 					<pButton class="pt-btn pseudo-submit-button" faClass="fa fa-trash fa-lg" faStyle="font-size: 1.2em; padding-right: 6px;"> 
 	  					<c:out value="Delete" />
 	  				</pButton>

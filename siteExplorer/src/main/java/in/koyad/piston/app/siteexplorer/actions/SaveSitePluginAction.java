@@ -27,6 +27,7 @@ import in.koyad.piston.app.siteexplorer.utils.ModelGenerator;
 import in.koyad.piston.cache.store.PortalDynamicCache;
 import in.koyad.piston.client.api.SiteClient;
 import in.koyad.piston.common.basic.StringUtil;
+import in.koyad.piston.common.basic.constant.FrameworkConstants;
 import in.koyad.piston.common.basic.exception.FrameworkException;
 import in.koyad.piston.common.constants.Messages;
 import in.koyad.piston.common.constants.MsgType;
@@ -56,21 +57,22 @@ public class SaveSitePluginAction extends BasePluginAction {
 		try {
 			//save data in db
 			form = req.getPluginForm(SiteDetailsPluginForm.class);
+			String siteId = form.getId();
 			Site newData = ModelGenerator.getSite(form);
-			siteClient.saveSite(newData);
+			Site response = siteClient.saveSite(newData);
 			
-			//update version in form
-			form.setVersion(newData.getVersion());
+			//clear cache
+			if(!StringUtil.isEmpty(siteId)) {
+				PortalDynamicCache.sites.remove(form.getId());
+			}
 			
-			//update data in cache
-			Site oldData = PortalDynamicCache.sites.get(newData.getId());
-			oldData.refresh(newData);
+			//update id, version in form
+			form.setId(response.getId());
+			form.setVersion(response.getVersion());
 			
-			//invalidate data in computation cache
-//			PermissionsUtil.clearSiteTreePermissions(newData);
-			
-			if(StringUtil.isEmpty(form.getId())) {
+			if(StringUtil.isEmpty(siteId)) {
 				req.setAttribute("msg", new Message(MsgType.INFO, MessageFormat.format(Messages.RESOURCE_CREATED_SUCCESSFULLY, "Site")));
+				return FrameworkConstants.PREFIX_FORWARD.concat(ListSitesPluginAction.ACTION_NAME);
 			} else {
 				req.setAttribute("msg", new Message(MsgType.INFO, MessageFormat.format(Messages.RESOURCE_UPDATED_SUCCESSFULLY, "Site")));
 			}

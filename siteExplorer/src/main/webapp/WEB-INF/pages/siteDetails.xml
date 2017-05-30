@@ -33,131 +33,132 @@
 		</style>
 		
 		<c:if test="${not empty msg}">
-			<p class="msg-container">
-				<span class="fa fa-info-circle fa-lg" style="margin-left: 5px; margin-right: 5px; color: white;"></span>
+			<c:if test="${msg.type eq 'info'}">
+				<c:set var="wrapperClass" value="success" />
+				<c:set var="msgIconClass" value="check-circle" />
+			</c:if>
+			<c:if test="${msg.type eq 'error'}">
+				<c:set var="wrapperClass" value="danger" />
+				<c:set var="msgIconClass" value="times-circle" />
+			</c:if>
+			<div style="margin: 10px 10px 2px;" class="alert alert-${wrapperClass}" role="alert">
+				<span class="fa fa-${msgIconClass} fa-lg" style="margin-right: 0.5rem"></span>
 				<c:out value="${msg.details}"/>
-			</p>
+			</div>
 		</c:if>
 		
 	    <div style="padding: 15px;">
 	        <form name="siteDetails" method="POST" action="saveSite">
-	        	<fieldset>
-					<legend>Site information</legend>
-	                <ul style="list-style: none;">
-	                     <li>Name</li>
-	                     <li>
-	                     		<text property="name" size="100" />
-	                     </li>
-	                     <li>Title</li>
-	                     <li>
-	                    		<text property="title" size="100" />
-	                     </li>
-	                     <li>Mapping</li>
-	                     <li>
-	                          	<text property="mapping" size="100" />
-	                     </li>
-	                     <li>Frame</li>
-	                     <li>
-	                          	<select property="frame" options="${frames}" label="title" value="id">
-				                	<option value="">-- Select --</option>
-				                </select>
-	                     </li>
-	                     <hidden property="id" />
-	                     <hidden property="version" />
-	                </ul>
-	        	</fieldset>
-	        	
-	        	<fieldset style="margin-top: 20px; padding: 20px;">
-					<legend>Permissions</legend>
-					<table style="width: 100%;" class="piston-table">
-						<tr>
-							<th>
-								Role
-							</th>
-							<th>
-								Permissions
-							</th>
-							<th>
-								Actions
-							</th>
-						</tr>
-						<tr>
-							<td style="text-align:center;">
-								<c:out value="MANAGER" />
-							</td>
-							<td style="padding: 0px;">
-								<div id="manager" class="pseudo-permission-container">
-									<ul class="horList1">
-										<c:iterate items="${siteDetails.manager}" var="mgr">
-											<li>
-												<span><c:out value="${mgr.split(':')[1]}" /></span>
-												<span class="prin-del">x</span>
-											</li>
-										</c:iterate>
-									</ul>
+        		<div class="form-group">
+                    	<label for="siteName">Name</label>
+                    	<text property="name" size="100" class="form-control" id="siteName" />
+                	</div>
+                <div class="form-group">
+                    	<label for="siteTitle">Title</label>
+                    	<text property="title" size="100" class="form-control" id="siteTitle" />
+                 	</div>
+                 	<div class="form-group">
+                    	<label for="siteMapping">Mapping</label>
+                    	<text property="mapping" size="100" class="form-control" id="siteMapping" />
+                 	</div>
+                 	<div class="form-group">
+                    	<label for="siteFrame">Frame</label>
+                    	<select property="frameId" options="${frames}" label="title" value="id" class="form-control" id="siteFrame">
+	                	<option value="">-- Select --</option>
+	                </select>
+                    </div>
+                 <hidden property="id" />
+                    <hidden property="version" />
+        	
+				<h2 class="section-h2">Permissions</h2>
+				<table style="width: 100%;" class="piston-table">
+					<tr>
+						<th>
+							Role
+						</th>
+						<th>
+							Permissions
+						</th>
+						<th>
+							Actions
+						</th>
+					</tr>
+					<tr>
+						<td style="text-align:center;">
+							<c:out value="MANAGER" />
+						</td>
+						<td style="padding: 0px;">
+							<div id="manager" class="pseudo-permission-container">
+								<ul class="horList1">
 									<c:iterate items="${siteDetails.manager}" var="mgr">
-										<input class="pseudo-role" type="hidden" name="manager" value="${mgr}" />
+										<li>
+											<span><c:out value="${mgr.split(':')[1]}" /></span>
+											<span class="prin-del">x</span>
+										</li>
 									</c:iterate>
-								</div>
-							</td>
-							<td style="text-align: center;">
-								<pButton class="pt-btn pseudo-add-permission" faClass="fa fa-plus fa-lg" faStyle="font-size: 1.2em; padding-right: 6px;"> 
-			  						<c:out value="Add" />
-					  			</pButton>
-							</td>
-						</tr>
-						<tr>
-							<td style="text-align:center;">
-								<c:out value="EDITOR" />
-							</td>
-							<td style="padding: 0px;">
-								<div id="editor" class="pseudo-permission-container">
-									<ul class="horList1">
-										<c:iterate items="${siteDetails.editor}" var="edit">
-											<li>
-												<span><c:out value="${edit.split(':')[1]}" /></span>
-												<span class="prin-del">x</span>
-											</li>
-										</c:iterate>
-									</ul>
+								</ul>
+								<c:iterate items="${siteDetails.manager}" var="mgr">
+									<input class="pseudo-role" type="hidden" name="manager" value="${mgr}" />
+								</c:iterate>
+							</div>
+						</td>
+						<td style="text-align: center;">
+							<pButton class="pt-btn pseudo-add-permission" faClass="fa fa-plus fa-lg" faStyle="font-size: 1.2em; padding-right: 6px;"> 
+		  						<c:out value="Add" />
+				  			</pButton>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align:center;">
+							<c:out value="EDITOR" />
+						</td>
+						<td style="padding: 0px;">
+							<div id="editor" class="pseudo-permission-container">
+								<ul class="horList1">
 									<c:iterate items="${siteDetails.editor}" var="edit">
-										<input class="pseudo-role" type="hidden" name="editor" value="${edit}" />
+										<li>
+											<span><c:out value="${edit.split(':')[1]}" /></span>
+											<span class="prin-del">x</span>
+										</li>
 									</c:iterate>
-								</div>
-							</td>
-							<td style="text-align: center;">
-								<pButton class="pt-btn pseudo-add-permission" faClass="fa fa-plus fa-lg" faStyle="font-size: 1.2em; padding-right: 6px;"> 
-			  						<c:out value="Add" />
-					  			</pButton>
-							</td>
-						</tr>
-						<tr>
-							<td style="text-align:center;">
-								<c:out value="USER" />
-							</td>
-							<td style="padding: 0px;">
-								<div id="user" class="pseudo-permission-container">
-									<ul class="horList1">
-										<c:iterate items="${siteDetails.user}" var="usr">
-											<li>
-												<span><c:out value="${usr.split(':')[1]}" /></span>
-												<span class="prin-del">x</span>
-											</li>
-										</c:iterate>
-									</ul>
+								</ul>
+								<c:iterate items="${siteDetails.editor}" var="edit">
+									<input class="pseudo-role" type="hidden" name="editor" value="${edit}" />
+								</c:iterate>
+							</div>
+						</td>
+						<td style="text-align: center;">
+							<pButton class="pt-btn pseudo-add-permission" faClass="fa fa-plus fa-lg" faStyle="font-size: 1.2em; padding-right: 6px;"> 
+		  						<c:out value="Add" />
+				  			</pButton>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align:center;">
+							<c:out value="USER" />
+						</td>
+						<td style="padding: 0px;">
+							<div id="user" class="pseudo-permission-container">
+								<ul class="horList1">
 									<c:iterate items="${siteDetails.user}" var="usr">
-										<input class="pseudo-role" type="hidden" name="user" value="${usr}" />
+										<li>
+											<span><c:out value="${usr.split(':')[1]}" /></span>
+											<span class="prin-del">x</span>
+										</li>
 									</c:iterate>
-								</div>
-							</td>
-							<td style="text-align: center;">
-								<pButton class="pt-btn pseudo-add-permission" faClass="fa fa-plus fa-lg" faStyle="font-size: 1.2em; padding-right: 6px;"> 
-			  						<c:out value="Add" />
-					  			</pButton>
-							</td>
-						</tr>
-					</table>   
-				</fieldset>
+								</ul>
+								<c:iterate items="${siteDetails.user}" var="usr">
+									<input class="pseudo-role" type="hidden" name="user" value="${usr}" />
+								</c:iterate>
+							</div>
+						</td>
+						<td style="text-align: center;">
+							<pButton class="pt-btn pseudo-add-permission" faClass="fa fa-plus fa-lg" faStyle="font-size: 1.2em; padding-right: 6px;"> 
+		  						<c:out value="Add" />
+				  			</pButton>
+						</td>
+					</tr>
+				</table>   
 				<div style="text-align: right; margin-top: 20px;">
 					<pButton class="pt-btn pseudo-submit-button" faClass="fa fa-save fa-lg" faStyle="font-size: 1.2em; padding-right: 6px;"> 
 		  				<c:if test="${empty siteDetails.id}">

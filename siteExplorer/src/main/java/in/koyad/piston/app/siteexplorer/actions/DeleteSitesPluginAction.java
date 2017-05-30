@@ -54,7 +54,7 @@ public class DeleteSitesPluginAction extends BasePluginAction {
 			//update cache
 			PortalDynamicCache.sites.removeAll(form.getSiteIds());
 			
-			req.setAttribute("msg", new Message(MsgType.INFO, "Sites deleted successfully."));
+			req.setAttribute("msg", new Message(MsgType.INFO, "Site(s) deleted successfully."));
 		} catch(FrameworkException ex) {
 			LOGGER.logException(ex);
 			req.setAttribute("msg", new Message(MsgType.ERROR, "Error occured while deleting sites."));

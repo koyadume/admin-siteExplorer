@@ -10,46 +10,30 @@
 	
 	    <div style="padding: 15px;">
 	        <form name="frameDetails" method="POST" action="saveFrame">
-	        	<fieldset>
-					<legend>Frame information</legend>
-	                <ul style="list-style: none;">
-	                     <li>Name</li>
-	                     <li>
-	                     		<text property="name" size="100" />
-	                     </li>
-	                     <li>Title</li>
-	                     <li>
-	                    		<text property="title" size="100" />
-	                     </li>
-	                     <hidden property="id" />
-	                     <hidden property="version" />
-	                </ul>
-	        	</fieldset>
+                <div class="form-group">
+                     <label for="frameName">Name</label>
+                     <text property="name" size="100" class="form-control" id="frameName" />
+                 </div>
+                 <div class="form-group">
+                     <label for="frameTitle">Title</label>
+                     <text property="title" size="100" class="form-control" id="frameTitle" />
+                  </div>
+                  <hidden property="id" />
+                  <hidden property="version" />
 	        	
-	        	<!-- 
-				<div style="text-align: right; margin-top: 10px;">
-					<c:if test="${empty frameDetails.id}">
-						<button style="margin-left: 20px; margin-top: 10px;" type="submit">Create</button>
-					</c:if>
-					<c:if test="${not empty frameDetails.id}">
-						<button style="margin-left: 20px; margin-top: 10px;" type="submit">Update</button>
-					</c:if>
-					<button style="margin-left: 20px; margin-top: 10px;" type="button" class="pseudo-close">Close</button>
-				</div> 
-				-->
-				<div style="text-align: right; margin-top: 20px;">
-					<pButton class="pt-btn pseudo-submit-button" faClass="fa fa-save fa-lg" faStyle="font-size: 1.2em; padding-right: 6px;"> 
-		  				<c:if test="${empty frameDetails.id}">
-							<c:out value="Create" />
-						</c:if>
-						<c:if test="${not empty frameDetails.id}">
-							<c:out value="Update" />
-						</c:if>
-		  			</pButton>
-					<plugin:actionURL action="listFrames" class="pt-btn" faClass="fa fa-close fa-lg" faStyle="font-size: 1.2em; padding-right: 6px;">
-						<c:out value="Close" />
-					</plugin:actionURL>
-				</div>
+					<div style="text-align: right; margin-top: 20px;">
+						<pButton class="pt-btn pseudo-submit-button" faClass="fa fa-save fa-lg" faStyle="font-size: 1.2em; padding-right: 6px;"> 
+			  				<c:if test="${empty frameDetails.id}">
+								<c:out value="Create" />
+							</c:if>
+							<c:if test="${not empty frameDetails.id}">
+								<c:out value="Update" />
+							</c:if>
+			  			</pButton>
+						<plugin:actionURL action="listFrames" class="pt-btn" faClass="fa fa-close fa-lg" faStyle="font-size: 1.2em; padding-right: 6px;">
+							<c:out value="Close" />
+						</plugin:actionURL>
+					</div>
             </form>
 	    </div>
 	</plugin:body>
