@@ -28,6 +28,8 @@ public class SiteDetailsPluginForm extends ResourcePluginForm {
 	private String title;
 	private String mapping;
 	private String frameId;
-	private boolean manageable = true;
+	private boolean enabled;
+	private boolean manageable;
+	private boolean secured;
 	
 }

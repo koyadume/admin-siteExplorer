@@ -50,7 +50,10 @@
 				</table>       
 			</c:if>
 			<c:if test="${empty children}">
-				<t>No data found.</t>
+				<div style="margin-bottom: 0;" class="alert alert-info" role="alert">
+					<span class="fa fa-info-circle fa-lg" style="margin-right: 0.5rem"></span>
+					<c:out value="No data found."/>
+				</div>
 			</c:if>
        	</div>
 		<script type="text/javascript">

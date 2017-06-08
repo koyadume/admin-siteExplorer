@@ -33,10 +33,18 @@
 		</style>
 		
 		<c:if test="${not empty msg}">
-			<p class="msg-container">
-				<span class="fa fa-info-circle fa-lg" style="margin-left: 5px; margin-right: 5px; color: white;"></span>
+			<c:if test="${msg.type eq 'info'}">
+				<c:set var="wrapperClass" value="success" />
+				<c:set var="msgIconClass" value="check-circle" />
+			</c:if>
+			<c:if test="${msg.type eq 'error'}">
+				<c:set var="wrapperClass" value="danger" />
+				<c:set var="msgIconClass" value="times-circle" />
+			</c:if>
+			<div style="margin: 10px 10px 2px;" class="alert alert-${wrapperClass}" role="alert">
+				<span class="fa fa-${msgIconClass} fa-lg" style="margin-right: 0.5rem"></span>
 				<c:out value="${msg.details}"/>
-			</p>
+			</div>
 		</c:if>
 		
 	    <div style="padding: 15px;">
@@ -59,6 +67,15 @@
 						<c:out value="Enabled?" />
 					</label>
 				</div>
+				<!-- For new page this should be hidden as new page inherits this flag from site -->
+				<c:if test="${not empty pageDetails.id}">
+					<div class="form-check">
+						<label class="form-check-label">
+							<checkbox property="secured" class="form-check-input" style="margin-right: 5px;" />
+							<c:out value="Secured?" />
+						</label>
+					</div>
+				</c:if>
 				<div class="form-check">
 					<label class="form-check-label">
 						<checkbox property="aclInherited" class="form-check-input" style="margin-right: 5px;" />
@@ -69,8 +86,8 @@
 				<hidden property="position" />
 				<hidden property="version" />
 	        	
-	        	<h2 class="section-h2">Select Parent</h2>
 	        	<c:if test="${empty pageDetails.id}">
+		        	<h2 class="section-h2">Select Parent</h2>
 					<div>
 					    <div style="padding: 15px; background-color: #ADD8E6;">
 					        <label> 
@@ -89,6 +106,9 @@
 					    	<div id="resChildren"></div>
 					    </div>
 					</div>
+				</c:if>
+				<c:if test="${not empty pageDetails.id}">
+					<hidden property="siteId" value="${pageDetails.siteId}" />
 				</c:if>
 	        	
 	        	<h2 class="section-h2">Permissions</h2>

@@ -7,10 +7,18 @@
 						
 	<plugin:body>
 		<c:if test="${not empty msg}">
-			<p class="msg-container">
-				<span class="fa fa-info-circle fa-lg" style="margin-left: 5px; margin-right: 5px; color: white;"></span>
+			<c:if test="${msg.type eq 'info'}">
+				<c:set var="wrapperClass" value="success" />
+				<c:set var="msgIconClass" value="check-circle" />
+			</c:if>
+			<c:if test="${msg.type eq 'error'}">
+				<c:set var="wrapperClass" value="danger" />
+				<c:set var="msgIconClass" value="times-circle" />
+			</c:if>
+			<div style="margin: 10px 10px 2px;" class="alert alert-${wrapperClass}" role="alert">
+				<span class="fa fa-${msgIconClass} fa-lg" style="margin-right: 0.5rem"></span>
 				<c:out value="${msg.details}"/>
-			</p>
+			</div>
 		</c:if>
 	
 		<div>
@@ -85,6 +93,7 @@
 													<td>
 														<plugin:actionURL action="pageDetails" title="Edit Page" class="img-btn" faClass="fa fa-pencil fa-lg" faStyle="font-size: 1.2em;">
 															<plugin:param name="id" value="${page.id}" />
+															<plugin:param name="siteId" value="${page.site.id}" />
 														</plugin:actionURL>
 														<a href="/piston/portal/site-${site.metadata.mapping}${page.uri}?piston_page_mode=edit" target="_blank" title="Edit layout" class="img-btn">
 															<span class="fa fa-columns fa-lg" style="font-size: 1.2em;"></span>
@@ -102,7 +111,10 @@
 						       	</div>
 					       	</c:if>
 					       	<c:if test="${empty children}">
-								No data found.
+								<div style="margin: 10px 10px 20px;" class="alert alert-info" role="alert">
+									<span class="fa fa-info-circle fa-lg" style="margin-right: 0.5rem"></span>
+									<c:out value="No data found."/>
+								</div>
 							</c:if>
 				    	</div>
 				    </div>

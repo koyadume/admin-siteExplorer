@@ -29,7 +29,8 @@ public class PageDetailsPluginForm extends ResourcePluginForm {
 	private String mapping;
 	private String siteId;
 	private String parentId;
-	private boolean enabled = false;
-	private boolean aclInherited = false;
+	private boolean enabled;
+	private boolean secured;
+	private boolean aclInherited;
 	private int position;
 }

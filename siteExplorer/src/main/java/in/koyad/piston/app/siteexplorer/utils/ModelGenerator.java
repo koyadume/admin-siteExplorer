@@ -34,11 +34,15 @@ import in.koyad.piston.app.siteexplorer.forms.PageDetailsPluginForm;
 import in.koyad.piston.app.siteexplorer.forms.ResourcePluginForm;
 import in.koyad.piston.app.siteexplorer.forms.SiteDetailsPluginForm;
 import in.koyad.piston.cache.store.PortalDynamicCache;
+import in.koyad.piston.client.api.SiteClient;
 import in.koyad.piston.common.basic.StringUtil;
 import in.koyad.piston.common.basic.exception.FrameworkException;
 import in.koyad.piston.common.util.BeanPropertyUtils;
+import in.koyad.piston.core.sdk.impl.SiteClientImpl;
 
 public class ModelGenerator {
+	
+	private static final SiteClient siteClient = SiteClientImpl.getInstance();
 	
 	public static Site getSite(SiteDetailsPluginForm form) throws FrameworkException {
 		SiteMetadata metadata = new SiteMetadata();
@@ -70,21 +74,22 @@ public class ModelGenerator {
 		//id, name, siteId
 		BeanPropertyUtils.copyProperties(page, form);
 		
-		Site site = null;
-		if(StringUtil.isEmpty(form.getId())) {
-			//This means its a new page and so site id must be present in the form.
-			site = PortalDynamicCache.sites.get(form.getSiteId());
-		} else {
-			site = PortalDynamicCache.pages.get(form.getId()).getSite();
-		}
+		// getSiteWithChildren is a DB call
+		Site site = PortalDynamicCache.getSiteWithChildren(form.getSiteId());
+//		if(StringUtil.isEmpty(form.getId())) {
+//			//This means its a new page and so site id must be present in the form.
+//			site = siteClient.getSite(form.getSiteId());
+//		} else {
+//			site = PortalDynamicCache.pages.get(form.getId()).getSite();
+//		}
 		page.setSite(site);
 		
 		if(StringUtil.isEmpty(form.getId())) {
 			//This means its a new page and so position should be set.
 			if(StringUtil.isEmpty(metadata.getParentId())) {
-				metadata.setPosition(PortalDynamicCache.sites.get(form.getSiteId()).getRootPages().size() + 1);
+				metadata.setPosition(site.getRootPages().size() + 1);
 			} else {
-				metadata.setPosition(PortalDynamicCache.pages.get(metadata.getParentId()).getChildren().size() + 1);
+				metadata.setPosition(siteClient.getPage(metadata.getParentId()).getChildren().size() + 1);
 			}
 		}
 		

@@ -58,6 +58,11 @@ public class SavePagePluginAction extends BasePluginAction {
 			//save data in db
 			form = req.getPluginForm(PageDetailsPluginForm.class);
 			Page newData = ModelGenerator.getPage(form);
+			
+			// if it is a new page, it should inherit secured flag from site
+			if(newData.getId().isEmpty()) {
+				newData.getMetadata().setSecured(newData.getSite().getMetadata().isSecured());
+			}
 			siteClient.savePage(newData);
 			
 			//update version in form

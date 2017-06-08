@@ -23,8 +23,10 @@ import in.koyad.piston.app.api.plugin.BasePluginAction;
 import in.koyad.piston.app.siteexplorer.forms.SiteDetailsPluginForm;
 import in.koyad.piston.app.siteexplorer.utils.PopulateFormUtil;
 import in.koyad.piston.cache.store.PortalDynamicCache;
+import in.koyad.piston.client.api.PortalClient;
 import in.koyad.piston.common.basic.exception.FrameworkException;
 import in.koyad.piston.common.util.LogUtil;
+import in.koyad.piston.core.sdk.impl.PortalClientImpl;
 
 @AnnoPluginAction(
 	name = SiteDetailsPluginAction.ACTION_NAME
@@ -35,12 +37,14 @@ public class SiteDetailsPluginAction extends BasePluginAction {
 
 	private static final LogUtil LOGGER = LogUtil.getLogger(SiteDetailsPluginAction.class);
 	
+	private static final PortalClient portalClient = PortalClientImpl.getInstance();
+	
 	@Override
 	public String execute(Request req) throws FrameworkException {
 		LOGGER.enterMethod("execute");
 		
 		String siteId = req.getParameter("id");
-		req.setAttribute("frames", PortalDynamicCache.frames.values());
+		req.setAttribute("frames", portalClient.getFrames());
 		if(null != siteId) {
 			SiteDetailsPluginForm siteForm = new SiteDetailsPluginForm();
 			Site site = PortalDynamicCache.sites.get(siteId);

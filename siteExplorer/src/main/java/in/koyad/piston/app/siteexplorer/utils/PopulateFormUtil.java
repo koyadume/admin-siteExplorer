@@ -50,6 +50,7 @@ public class PopulateFormUtil {
 	public static void populatePageDetails(PageDetailsPluginForm form, Page page) {
 		//copy id, name etc.
 		BeanPropertyUtils.copyProperties(form, page);
+		form.setSiteId(page.getSite().getId());
 		
 		//copy title, mapping etc.
 		BeanPropertyUtils.copyProperties(form, page.getMetadata());

@@ -57,28 +57,31 @@ public class SaveFramePluginAction extends BasePluginAction {
 			//update data in db
 			form = req.getPluginForm(FrameDetailsPluginForm.class);
 			
-			boolean update = true;
-			if(StringUtil.isEmpty(form.getId())) {
-				update = false;
-			}
+//			boolean update = true;
+//			if(StringUtil.isEmpty(form.getId())) {
+//				update = false;
+//			}
 			
-			Frame newData = ModelGenerator.getFrame(form);
-			portalClient.saveFrame(newData);
+			Frame updatedData = ModelGenerator.getFrame(form);
+			Frame dbData = portalClient.saveFrame(updatedData);
 			
 			//update version in form
-			form.setVersion(newData.getVersion());
+			form.setVersion(dbData.getVersion());
 			
 			//update data in cache if it is update operation
-			if(update) {
-				Frame oldData = PortalDynamicCache.frames.get(newData.getId());
-				oldData.refresh(newData);
-			} else {
-				PortalDynamicCache.frames.get(newData.getId());
-			}
+//			if(update) {
+//				Frame oldData = PortalDynamicCache.frames.get(dbData.getId());
+//				oldData.refresh(dbData);
+//			} else {
+				PortalDynamicCache.frames.remove(dbData.getId());
+//			}
 			
-			if(!update) {
-				form.setId(newData.getId());
+			// create operation
+			if(form.getId().isEmpty()) {
+				form.setId(updatedData.getId());
 				req.setAttribute("msg", new Message(MsgType.INFO, MessageFormat.format(Messages.RESOURCE_CREATED_SUCCESSFULLY, "Frame")));
+			
+			// update operation
 			} else {
 				req.setAttribute("msg", new Message(MsgType.INFO, MessageFormat.format(Messages.RESOURCE_UPDATED_SUCCESSFULLY, "Frame")));
 			}

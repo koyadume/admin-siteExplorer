@@ -22,7 +22,6 @@ import in.koyad.piston.app.api.model.Request;
 import in.koyad.piston.app.api.plugin.BasePluginAction;
 import in.koyad.piston.app.siteexplorer.forms.PageDetailsPluginForm;
 import in.koyad.piston.app.siteexplorer.utils.PopulateFormUtil;
-import in.koyad.piston.cache.store.PortalDynamicCache;
 import in.koyad.piston.client.api.SiteClient;
 import in.koyad.piston.common.basic.exception.FrameworkException;
 import in.koyad.piston.common.util.LogUtil;
@@ -44,10 +43,12 @@ public class PageDetailsPluginAction extends BasePluginAction {
 		LOGGER.enterMethod("execute");
 		
 		String pageId = req.getParameter("id");
+		String siteId = req.getParameter("siteId");
 		
 		if(null != pageId) {
 			PageDetailsPluginForm pageform = new PageDetailsPluginForm();
-			Page page = PortalDynamicCache.pages.get(pageId);
+			Page page = siteClient.getPage(pageId);
+			page.setSite(siteClient.getSite(siteId));
 			PopulateFormUtil.populatePageDetails(pageform, page);
 			req.setAttribute(PageDetailsPluginForm.FORM_NAME, pageform);
 		}

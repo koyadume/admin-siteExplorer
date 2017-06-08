@@ -54,7 +54,7 @@ public class DeletePagesPluginAction extends BasePluginAction {
 			//update data in cache
 			PortalDynamicCache.sites.remove(form.getSiteId());
 			
-			req.setAttribute("msg", new Message(MsgType.INFO, "Pages deleted successfully."));
+			req.setAttribute("msg", new Message(MsgType.INFO, "Page(s) deleted successfully."));
 		} catch(FrameworkException ex) {
 			LOGGER.logException(ex);
 			req.setAttribute("msg", new Message(MsgType.ERROR, "Error occured while deleting pages."));
