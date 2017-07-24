@@ -21,6 +21,7 @@ import org.koyad.piston.business.model.Site;
 
 import in.koyad.piston.app.api.annotation.AnnoPluginAction;
 import in.koyad.piston.app.api.model.Request;
+import in.koyad.piston.app.api.model.Response;
 import in.koyad.piston.app.api.plugin.BasePluginAction;
 import in.koyad.piston.client.api.SiteClient;
 import in.koyad.piston.common.basic.exception.FrameworkException;
@@ -39,7 +40,7 @@ public class ListSitesPluginAction extends BasePluginAction {
 	private static final LogUtil LOGGER = LogUtil.getLogger(ListSitesPluginAction.class);
 	
 	@Override
-	public String execute(Request req) throws FrameworkException {
+	public String execute(Request req, Response resp) throws FrameworkException {
 		LOGGER.enterMethod("execute");
 		
 		List<Site> sites = siteClient.getSites();

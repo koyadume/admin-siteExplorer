@@ -21,12 +21,12 @@ import org.koyad.piston.business.model.Frame;
 
 import in.koyad.piston.app.api.annotation.AnnoPluginAction;
 import in.koyad.piston.app.api.model.Request;
+import in.koyad.piston.app.api.model.Response;
 import in.koyad.piston.app.api.plugin.BasePluginAction;
 import in.koyad.piston.app.siteexplorer.forms.FrameDetailsPluginForm;
 import in.koyad.piston.app.siteexplorer.utils.ModelGenerator;
 import in.koyad.piston.cache.store.PortalDynamicCache;
 import in.koyad.piston.client.api.PortalClient;
-import in.koyad.piston.common.basic.StringUtil;
 import in.koyad.piston.common.basic.exception.FrameworkException;
 import in.koyad.piston.common.constants.Messages;
 import in.koyad.piston.common.constants.MsgType;
@@ -49,7 +49,7 @@ public class SaveFramePluginAction extends BasePluginAction {
 	private static final LogUtil LOGGER = LogUtil.getLogger(SaveFramePluginAction.class);
 	
 	@Override
-	public String execute(Request req) throws FrameworkException {
+	public String execute(Request req, Response resp) throws FrameworkException {
 		LOGGER.enterMethod("execute");
 		
 		FrameDetailsPluginForm form = null;

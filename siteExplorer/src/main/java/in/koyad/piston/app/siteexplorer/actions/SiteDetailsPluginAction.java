@@ -19,6 +19,7 @@ import org.koyad.piston.business.model.Site;
 
 import in.koyad.piston.app.api.annotation.AnnoPluginAction;
 import in.koyad.piston.app.api.model.Request;
+import in.koyad.piston.app.api.model.Response;
 import in.koyad.piston.app.api.plugin.BasePluginAction;
 import in.koyad.piston.app.siteexplorer.forms.SiteDetailsPluginForm;
 import in.koyad.piston.app.siteexplorer.utils.PopulateFormUtil;
@@ -40,7 +41,7 @@ public class SiteDetailsPluginAction extends BasePluginAction {
 	private static final PortalClient portalClient = PortalClientImpl.getInstance();
 	
 	@Override
-	public String execute(Request req) throws FrameworkException {
+	public String execute(Request req, Response resp) throws FrameworkException {
 		LOGGER.enterMethod("execute");
 		
 		String siteId = req.getParameter("id");

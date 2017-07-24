@@ -24,6 +24,7 @@ import org.koyad.piston.business.model.Site;
 
 import in.koyad.piston.app.api.annotation.AnnoPluginAction;
 import in.koyad.piston.app.api.model.Request;
+import in.koyad.piston.app.api.model.Response;
 import in.koyad.piston.app.api.plugin.BasePluginAction;
 import in.koyad.piston.app.siteexplorer.forms.DeletePagesPluginForm;
 import in.koyad.piston.app.siteexplorer.forms.GetSitePageChildrenPluginForm;
@@ -46,7 +47,7 @@ public class GetSitePageChildrenPluginAction extends BasePluginAction {
 	private static final LogUtil LOGGER = LogUtil.getLogger(GetSitePageChildrenPluginAction.class);
 	
 	@Override
-	public String execute(Request req) throws FrameworkException {
+	public String execute(Request req, Response resp) throws FrameworkException {
 		LOGGER.enterMethod("execute");
 		
 		List<Site> sites = siteClient.getSites();

@@ -19,6 +19,7 @@ import org.koyad.piston.business.model.Page;
 
 import in.koyad.piston.app.api.annotation.AnnoPluginAction;
 import in.koyad.piston.app.api.model.Request;
+import in.koyad.piston.app.api.model.Response;
 import in.koyad.piston.app.api.plugin.BasePluginAction;
 import in.koyad.piston.app.siteexplorer.forms.PageDetailsPluginForm;
 import in.koyad.piston.app.siteexplorer.utils.PopulateFormUtil;
@@ -39,7 +40,7 @@ public class PageDetailsPluginAction extends BasePluginAction {
 	private static final LogUtil LOGGER = LogUtil.getLogger(PageDetailsPluginAction.class);
 	
 	@Override
-	public String execute(Request req) throws FrameworkException {
+	public String execute(Request req, Response resp) throws FrameworkException {
 		LOGGER.enterMethod("execute");
 		
 		String pageId = req.getParameter("id");

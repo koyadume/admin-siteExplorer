@@ -2,7 +2,7 @@
 <plugin:page xmlns="html5" xmlns:plugin="plugin" xmlns:c="core">
 	<plugin:body>
 		<c:if test="${not empty msg}">
-			<p class="msg-container">
+			<p class="msg-container" style="margin-top: 5px;">
 				<span class="fa fa-info-circle fa-lg" style="margin-left: 5px; margin-right: 5px; color: white;"></span>
 				<c:out value="${msg.details}"/>
 			</p>

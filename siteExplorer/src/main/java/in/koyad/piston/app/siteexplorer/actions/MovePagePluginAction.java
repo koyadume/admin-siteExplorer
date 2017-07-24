@@ -17,6 +17,7 @@ package in.koyad.piston.app.siteexplorer.actions;
 
 import in.koyad.piston.app.api.annotation.AnnoPluginAction;
 import in.koyad.piston.app.api.model.Request;
+import in.koyad.piston.app.api.model.Response;
 import in.koyad.piston.app.api.plugin.BasePluginAction;
 import in.koyad.piston.app.siteexplorer.forms.MovePagePluginForm;
 import in.koyad.piston.client.api.SiteClient;
@@ -39,7 +40,7 @@ public class MovePagePluginAction extends BasePluginAction {
 	private static final LogUtil LOGGER = LogUtil.getLogger(MovePagePluginAction.class);
 	
 	@Override
-	public String execute(Request req) throws FrameworkException {
+	public String execute(Request req, Response resp) throws FrameworkException {
 		LOGGER.enterMethod("execute");
 		try {
 			MovePagePluginForm form = req.getPluginForm(MovePagePluginForm.class);

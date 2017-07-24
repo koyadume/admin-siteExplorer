@@ -19,6 +19,7 @@ import java.util.Arrays;
 
 import in.koyad.piston.app.api.annotation.AnnoPluginAction;
 import in.koyad.piston.app.api.model.Request;
+import in.koyad.piston.app.api.model.Response;
 import in.koyad.piston.app.api.plugin.BasePluginAction;
 import in.koyad.piston.app.siteexplorer.forms.DeleteFramesPluginForm;
 import in.koyad.piston.cache.store.PortalDynamicCache;
@@ -42,7 +43,7 @@ public class DeleteFramesPluginAction extends BasePluginAction {
 	private static final LogUtil LOGGER = LogUtil.getLogger(DeleteFramesPluginAction.class);
 	
 	@Override
-	public String execute(Request req) throws FrameworkException {
+	public String execute(Request req, Response resp) throws FrameworkException {
 		LOGGER.enterMethod("execute");
 		
 		DeleteFramesPluginForm form = null;
